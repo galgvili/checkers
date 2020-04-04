@@ -3,7 +3,7 @@ package Checkers;
 public class Board {
    int Squares[][]=new int[8][8];
    
-	void InitiateBoard(Board BOARD) 
+	void BoardReset(Board BOARD) //Reset board pawns positions 
     {
 		//Black=1, White=2, Blank=0
         int i=0;
@@ -17,12 +17,12 @@ public class Board {
         	BOARD.Squares[7][i]=2;
         	}
         }
-        
-    void PrintSquare(int i,int j) 
+      
+    void PrintSquare(int i,int j) //Print specific board square.
     {
     	System.out.print(Squares[i][j]);
     }
-    void PrintBoard() 
+    void PrintBoard() //Print current board
     {
     	int i,j;
     	for(j=0;j<8;j++) 
