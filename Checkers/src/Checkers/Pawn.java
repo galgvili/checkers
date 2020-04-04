@@ -1,5 +1,6 @@
 package Checkers;
 
-public class Pawn {
+public abstract class Pawn {
+
 
 }

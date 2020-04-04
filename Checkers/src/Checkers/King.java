@@ -1,5 +1,4 @@
 package Checkers;
 
-public class King {
-
+public class King extends Pawn{
 }
