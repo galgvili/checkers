@@ -3,30 +3,35 @@ package Checkers;
 public class Board {
    Soldier Squares[][]=new Soldier[8][8];
    
-	void BoardReset(Board BOARD) //Reset board pawns positions 
+	Board InitiateBoard() //Reset board pawns positions 
     {
 		//Black=1, White=2, Blank=0
         int x;
+    	Board BOARD=new Board();
         for(x=0;x<7;x+=2) 
         	{
-        	//Black soldiers creation
-        	BOARD.Squares[0][x+1]=new Soldier();
-        	BOARD.Squares[0][x+1].Color=1;
-        	BOARD.Squares[1][x]=new Soldier();
-        	BOARD.Squares[1][x].Color=1;
-        	BOARD.Squares[2][x+1]=new Soldier();
-        	BOARD.Squares[2][x+1].Color=1;
-        	//White soldiers creation
-        	BOARD.Squares[5][x]=new Soldier();
-        	BOARD.Squares[5][x].Color=2;
-        	BOARD.Squares[6][x+1]=new Soldier();
-        	BOARD.Squares[6][x+1].Color=2;
-        	BOARD.Squares[7][x]=new Soldier();
-        	BOARD.Squares[7][x].Color=2;
+        	for(int y=0;y<8;y+=5) {
+        	//y=0 - Black soldiers creation 
+        	//y=5 White soldiers creation
+        	BOARD.Squares[y][x+1]=new Soldier();
+        	BOARD.Squares[y][x+1].Color=1;
+        	BOARD.Squares[y+1][x]=new Soldier();
+        	BOARD.Squares[y+1][x].Color=1;
+        	BOARD.Squares[y+2][x+1]=new Soldier();
+        	BOARD.Squares[y+2][x+1].Color=1;
         	}
+        	}
+        return BOARD;
         }
-      
-    void PrintSquare(int y,int x) //Print specific board square.
+    
+
+	
+	
+	
+	
+	
+	
+	void PrintSquare(int y,int x) //Print specific board square.
     {
     	System.out.print(Squares[y][x]);
     }
