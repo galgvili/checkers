@@ -1,36 +1,46 @@
 package Checkers;
 
 public class Board {
-   int Squares[][]=new int[8][8];
+   Soldier Squares[][]=new Soldier[8][8];
    
 	void BoardReset(Board BOARD) //Reset board pawns positions 
     {
 		//Black=1, White=2, Blank=0
-        int i=0;
-        for(i=0;i<7;i+=2) 
+        int x;
+        for(x=0;x<7;x+=2) 
         	{
-        	BOARD.Squares[0][i+1]=1;
-        	BOARD.Squares[1][i]=1;
-        	BOARD.Squares[2][i+1]=1;
-        	BOARD.Squares[5][i]=2;
-        	BOARD.Squares[6][i+1]=2;
-        	BOARD.Squares[7][i]=2;
+        	//Black soldiers creation
+        	BOARD.Squares[0][x+1]=new Soldier();
+        	BOARD.Squares[0][x+1].Color=1;
+        	BOARD.Squares[1][x]=new Soldier();
+        	BOARD.Squares[1][x].Color=1;
+        	BOARD.Squares[2][x+1]=new Soldier();
+        	BOARD.Squares[2][x+1].Color=1;
+        	//White soldiers creation
+        	BOARD.Squares[5][x]=new Soldier();
+        	BOARD.Squares[5][x].Color=2;
+        	BOARD.Squares[6][x+1]=new Soldier();
+        	BOARD.Squares[6][x+1].Color=2;
+        	BOARD.Squares[7][x]=new Soldier();
+        	BOARD.Squares[7][x].Color=2;
         	}
         }
       
-    void PrintSquare(int i,int j) //Print specific board square.
+    void PrintSquare(int y,int x) //Print specific board square.
     {
-    	System.out.print(Squares[i][j]);
+    	System.out.print(Squares[y][x]);
     }
     void PrintBoard() //Print current board
     {
-    	int i,j;
-    	for(j=0;j<8;j++) 
+    	int x,y;
+    	for(y=0;y<8;y++) 
     	{
-        	for(i=0;i<8;i++) 
+        	for(x=0;x<8;x++) 
         	{
-        		System.out.print(Squares[j][i]);
-            	System.out.print(" | ");
+        		if(Squares[y][x]==null)
+                    	System.out.print("0 | ");
+        		else
+        		System.out.print(Squares[y][x].Color+" | ");
         	}
         	System.out.println("\n");
         	}
