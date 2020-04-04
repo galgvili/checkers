@@ -4,7 +4,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		Board board=new Board();
-		board.InitiateBoard(board);
+		board.BoardReset(board);
 		board.PrintBoard();
 	}
 
