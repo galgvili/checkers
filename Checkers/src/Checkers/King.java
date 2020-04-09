@@ -11,7 +11,6 @@ public class King extends Pawn{
 	{
 		LocationX--;
 		LocationY--;
-
 		
 	}
 }

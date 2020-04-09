@@ -7,8 +7,12 @@ public abstract class Pawn
 	
 	void MoveRightForward()
 	{
+		if (Color==0) 
+		{
 		LocationX++;
 		LocationY++;
+		}
+		
 	}
 	void MoveLeftForward()
 	{
