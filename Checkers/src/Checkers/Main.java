@@ -7,9 +7,12 @@ public class Main {
 		BOARD=BOARD.InitiateBoard();
     	//BOARD.Squares[4][2]=new Soldier();
     	//BOARD.Squares[4][2].Color=2;
-		BOARD.PrintBoard();
+		BOARD.EatLeftForward(2,1);
+		BOARD.EatLeftForward(5,2);
 
-		System.out.print(BOARD.WhiteMoveOptions(5, 1));
+		BOARD.PrintBoard();
+		
+
 	}
 
 }

@@ -11,17 +11,20 @@ public class Board {
         for(x=0;x<7;x+=2) 
         	{
     		COLOR=2;
-        	for(int y=0;y<8;y+=5) {
-        	//y=0 - Black soldiers creation 
-        	//y=5 White soldiers creation
+    		int y=0;
         	BOARD.Squares[y][x+1]=new Soldier();
-        	BOARD.Squares[y][x+1].Color=COLOR;
+        	BOARD.Squares[y][x+1].Color=2;
         	BOARD.Squares[y+1][x]=new Soldier();
-        	BOARD.Squares[y+1][x].Color=COLOR;
+        	BOARD.Squares[y+1][x].Color=2;
         	BOARD.Squares[y+2][x+1]=new Soldier();
-        	BOARD.Squares[y+2][x+1].Color=COLOR;
-        	COLOR=1;
-        	}
+        	BOARD.Squares[y+2][x+1].Color=2;
+        	BOARD.Squares[y+5][x]=new Soldier();
+        	BOARD.Squares[y+5][x].Color=1;
+        	BOARD.Squares[y+6][x+1]=new Soldier();
+        	BOARD.Squares[y+6][x+1].Color=1;
+        	BOARD.Squares[y+7][x]=new Soldier();
+        	BOARD.Squares[y+7][x].Color=1;
+        	
         	}
         return BOARD;
         }
@@ -85,7 +88,6 @@ public class Board {
     		return 2;
     	return 0;	
     }
-    
     int WhiteRightEatChecker(int y, int x)
     {
     	if(x>5||y>5)//Check if on board boundaries 
@@ -111,7 +113,102 @@ public class Board {
     	return 1;  	
     }
 
-    
+	void MoveLeftForward(int y, int x)
+	{
+		if(Squares[y][x].Color==1) //If color is white
+		{
+		Squares[y+1][x+1]=new Soldier();
+		Squares[y+1][x+1].LocationX=x+1;
+		Squares[y+1][x+1].LocationY=y+1;
+		Squares[y+1][x+1].Color=1;
+		Squares[y][x]=null;
+		
+		}
+		else //if color is black
+		{
+		Squares[y-1][x+1]=new Soldier();
+		Squares[y-1][x+1].LocationX=x+1;
+		Squares[y-1][x+1].LocationY=y-1;
+		Squares[y-1][x+1].Color=2;
+		Squares[y][x]=null;
+		}
+
+	}
+
+	void MoveRightForward(int y, int x)
+	{
+		if(Squares[y][x].Color==1) //If color is white
+		{
+		Squares[y+1][x+1]=new Soldier();
+		Squares[y+1][x+1].LocationX=x+1;
+		Squares[y+1][x+1].LocationY=y+1;
+		Squares[y+1][x+1].Color=1;
+		Squares[y][x]=null;
+		
+		}
+		else //if color is black
+		{
+		Squares[y-1][x+1]=new Soldier();
+		Squares[y-1][x+1].LocationX=x+1;
+		Squares[y-1][x+1].LocationY=y-1;
+		Squares[y-1][x+1].Color=2;
+		Squares[y][x]=null;
+		}
+
+	}
+
+	void EatLeftForward(int y, int x)
+	{
+		if(Squares[y][x].Color==1) //If color is white
+		{
+		Squares[y-2][x-2]=new Soldier();
+		Squares[y-2][x-2].LocationX=x-2;
+		Squares[y-2][x-2].LocationY=y-2;
+		Squares[y-2][x-2].Color=1;
+		Squares[y][x]=null;
+		Squares[y-1][x-1]=null;
+
+		
+		}
+		else //if color is black
+		{
+		Squares[y+2][x+2]=new Soldier();
+		Squares[y+2][x+2].LocationX=x+2;
+		Squares[y+2][x+2].LocationY=y-2;
+		Squares[y+2][x+2].Color=2;
+		Squares[y][x]=null;
+		Squares[y+1][x+1]=null;
+
+		}
+
+	}
+
+	void EatRightForward(int y, int x)
+	{
+		if(Squares[y][x].Color==1) //If color is white
+		{
+		Squares[y-2][x+2]=new Soldier();
+		Squares[y-2][x+2].LocationX=x+2;
+		Squares[y-2][x+2].LocationY=y-2;
+		Squares[y-2][x+2].Color=1;
+		Squares[y][x]=null;
+		Squares[y-1][x+1]=null;
+
+		
+		}
+		else //if color is black
+		{
+		Squares[y+2][x-2]=new Soldier();
+		Squares[y+2][x-2].LocationX=x-2;
+		Squares[y+2][x-2].LocationY=y+2;
+		Squares[y+2][x-2].Color=2;
+		Squares[y][x]=null;
+		Squares[y+1][x-1]=null;
+
+		}
+
+	}
+
 
 }
 
