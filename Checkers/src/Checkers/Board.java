@@ -6,11 +6,10 @@ public class Board {
 	Board InitiateBoard() //Reset board pawns positions 
     {
 		//Black=2, White=1, Blank=0
-        int x,COLOR;
+        int x;
     	Board BOARD=new Board();
         for(x=0;x<7;x+=2) 
         	{
-    		COLOR=2;
     		int y=0;
         	BOARD.Squares[y][x+1]=new Soldier();
         	BOARD.Squares[y][x+1].Color=2;
@@ -117,19 +116,19 @@ public class Board {
 	{
 		if(Squares[y][x].Color==1) //If color is white
 		{
-		Squares[y+1][x+1]=new Soldier();
-		Squares[y+1][x+1].LocationX=x+1;
-		Squares[y+1][x+1].LocationY=y+1;
-		Squares[y+1][x+1].Color=1;
+		Squares[y-1][x+1]=new Soldier();
+		Squares[y-1][x+1].LocationX=x+1;
+		Squares[y-1][x+1].LocationY=y-1;
+		Squares[y-1][x+1].Color=1;
 		Squares[y][x]=null;
 		
 		}
 		else //if color is black
 		{
-		Squares[y-1][x+1]=new Soldier();
-		Squares[y-1][x+1].LocationX=x+1;
-		Squares[y-1][x+1].LocationY=y-1;
-		Squares[y-1][x+1].Color=2;
+		Squares[y+1][x+1]=new Soldier();
+		Squares[y+1][x+1].LocationX=x+1;
+		Squares[y+1][x+1].LocationY=y+1;
+		Squares[y+1][x+1].Color=2;
 		Squares[y][x]=null;
 		}
 
@@ -139,19 +138,19 @@ public class Board {
 	{
 		if(Squares[y][x].Color==1) //If color is white
 		{
-		Squares[y+1][x+1]=new Soldier();
-		Squares[y+1][x+1].LocationX=x+1;
-		Squares[y+1][x+1].LocationY=y+1;
-		Squares[y+1][x+1].Color=1;
+		Squares[y-1][x+1]=new Soldier();
+		Squares[y-1][x+1].LocationX=x+1;
+		Squares[y-1][x+1].LocationY=y-1;
+		Squares[y-1][x+1].Color=1;
 		Squares[y][x]=null;
 		
 		}
 		else //if color is black
 		{
-		Squares[y-1][x+1]=new Soldier();
-		Squares[y-1][x+1].LocationX=x+1;
-		Squares[y-1][x+1].LocationY=y-1;
-		Squares[y-1][x+1].Color=2;
+		Squares[y+1][x+1]=new Soldier();
+		Squares[y+1][x+1].LocationX=x+1;
+		Squares[y+1][x+1].LocationY=y+1;
+		Squares[y+1][x+1].Color=2;
 		Squares[y][x]=null;
 		}
 
