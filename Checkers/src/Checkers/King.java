@@ -1,33 +1,5 @@
 package Checkers;
 
-public class King extends Pawn{
+public class King extends Soldier{
 	
-	void MoveRightBackward()
-	{
-		if(Color==1) //If color is White
-		{
-		LocationX++;
-		LocationY--;
-		}
-		else //If color is Black
-		{
-			LocationX++;
-			LocationY++;
-
-		}
-	}
-	void MoveLeftBackward()
-	{
-		if(Color==1) //If color is White
-		{
-		LocationX--;
-		LocationY--;
-		}
-		else //If color is Black
-		{
-			LocationX--;
-			LocationY++;
-		}
-	}
-
 }
