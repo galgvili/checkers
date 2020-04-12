@@ -272,18 +272,20 @@ public class Board {
 	void KingCheck(int y, int x) {
 	if(y==0&&Squares[y][x].Color==1) {
 		Squares[y][x]=new King();
-		Squares[y][x].Color=11;
+		Squares[y][x].Color=1;
 		Squares[y][x].LocationX=x;
 		Squares[y][x].LocationY=y;
+		Squares[y][x].Is_King=true;
 		
 	}
 	
 	if(y==7&&Squares[y][x].Color==2) 
 	{
 		Squares[y][x]=new King();
-		Squares[y][x].Color=22;
+		Squares[y][x].Color=2;
 		Squares[y][x].LocationX=x;
 		Squares[y][x].LocationY=y;
+		Squares[y][x].Is_King=true;
 
 	}
 
