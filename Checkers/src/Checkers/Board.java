@@ -49,16 +49,16 @@ public class Board {
 
  }
     
-    int WhiteMoveOptions(int y,int x) //Check move options and return code
+    int MoveOptions(int y,int x) //Check move options and return code
     {
     	int code=0;
-    	if(WhiteRightMoveChecker(y,x)==1)
+    	if(RightMoveChecker(y,x)==1)
     		code++;
-    	if(WhiteLeftMoveChecker(y,x)==1)
+    	if(LeftMoveChecker(y,x)==1)
     		code+=2;
-    	if(WhiteRightEatChecker(y,x)==1)
+    	if(RightEatChecker(y,x)==1)
     		code+=10;
-    	if(WhiteLeftEatChecker(y,x)==1)
+    	if(LeftEatChecker(y,x)==1)
     		code+=20;
     	return code;  				
     	//code values: 1=Only right|2=Only left|3=Right and Left|10=Only eat left|20=Only eat left|
@@ -67,29 +67,56 @@ public class Board {
     	
   	
     }
-    int WhiteRightMoveChecker(int y, int x)//Check if can move right, 0=can't move, 1=can move, 2=can eat 
+    int RightMoveChecker(int y, int x)//Check if can move right, 0=can't move, 1=can move, 2=can eat 
     {
-    	if(x==7||y==7)//Check if on board boundaries 
+    	if(Squares[y][x]==null)
+    		return 0;
+		if(Squares[y][x].Color==1) //If color is white
+		{
+
+    	if(x==7||y==0)//Check if on board boundaries 
     		return 0;
     	if(Squares[y-1][x+1]==null)
     		return 1;
-    	if(WhiteRightEatChecker(x,y)==1)
-    		return 2;
+		}
+		else//If color is black
+		{
+	    	if(x==0||y==7)//Check if on board boundaries 
+	    		return 0;
+	    	if(Squares[y+1][x-1]==null)
+	    		return 1;
+		
+		}
     	return 0;	
+    	
     }
-    int WhiteLeftMoveChecker(int y, int x)//Check if can move left, 0=can't move, 1=can move, 2=can eat 
+    int LeftMoveChecker(int y, int x)//Check if can move left, 0=can't move, 1=can move, 2=can eat 
     {
+    	if(Squares[y][x]==null)
+    		return 0;
+		if(Squares[y][x].Color==1) //If color is white
+		{
     	if(x==0||y==7)//Check if on board boundaries 
     		return 0;
     	if(Squares[y-1][x-1]==null)
     		return 1;
-    	if(WhiteLeftEatChecker(x,y)==1)
-    		return 2;
+		}
+		else //If color is black
+		{
+	    	if(x==7||y==0)//Check if on board boundaries 
+	    		return 0;
+	    	if(Squares[y+1][x+1]==null)
+	    		return 1;
+		}
     	return 0;	
     }
-    int WhiteRightEatChecker(int y, int x)
+    int RightEatChecker(int y, int x)
     {
-    	if(x>5||y>5)//Check if on board boundaries 
+    	if(Squares[y][x]==null)
+    		return 0;
+		if(Squares[y][x].Color==1) //If color is white
+		{
+    	if(x>5||y<2)//Check if on board boundaries 
     		return 0;
     	if(Squares[y-1][x+1]==null)//Check if right square is empty
     		return 0;
@@ -97,11 +124,28 @@ public class Board {
     		return 0;
     	if(Squares[y-2][x+2]!=null)//Check if the right of the right square is not empty
     		return 0;
+		}
+		else //If color is black
+		{
+	    	if(x<2||y>5)//Check if on board boundaries 
+	    		return 0;
+	    	if(Squares[y+1][x-1]==null)//Check if right square is empty
+	    		return 0;
+	    	if(Squares[y][x].Color==Squares[y+1][x-1].Color)//Check if right square is the same color
+	    		return 0;
+	    	if(Squares[y+2][x-2]!=null)//Check if the right of the right square is not empty
+	    		return 0; 	
+			
+		}
     	return 1;  	
     }
-    int WhiteLeftEatChecker(int y, int x)
+    int LeftEatChecker(int y, int x)
     {
-    	if(x<2||y>5)
+    	if(Squares[y][x]==null)//if square is empty
+    		return 0;
+		if(Squares[y][x].Color==1) //If color is white
+		{
+    	if(x<2||y<2)
     		return 0;
     	if(Squares[y-1][x-1]==null)
     		return 0;
@@ -109,17 +153,31 @@ public class Board {
     		return 0;
     	if(Squares[y-2][x-2]!=null)//Check if the left of the left square is not empty
     		return 0;
+		}
+		else //If color is black
+		{
+	    	if(x>5||y>5)
+	    		return 0;
+	    	if(Squares[y+1][x+1]==null)
+	    		return 0;
+	    	if(Squares[y][x].Color==Squares[y+1][x+1].Color)//Check if left square is the same color
+	    		return 0;
+	    	if(Squares[y+2][x+2]!=null)//Check if the left of the left square is not empty
+	    		return 0;		
+		}
     	return 1;  	
     }
 
 	void MoveLeftForward(int y, int x)
 	{
+    	if(Squares[y][x]==null)
+    		return;
 		if(Squares[y][x].Color==1) //If color is white
 		{
-		Squares[y-1][x+1]=new Soldier();
-		Squares[y-1][x+1].LocationX=x+1;
-		Squares[y-1][x+1].LocationY=y-1;
-		Squares[y-1][x+1].Color=1;
+		Squares[y-1][x-1]=new Soldier();
+		Squares[y-1][x-1].LocationX=x-1;
+		Squares[y-1][x-1].LocationY=y-1;
+		Squares[y-1][x-1].Color=1;
 		Squares[y][x]=null;
 		
 		}
@@ -136,7 +194,9 @@ public class Board {
 
 	void MoveRightForward(int y, int x)
 	{
-		if(Squares[y][x].Color==1) //If color is white
+    	if(Squares[y][x]==null)
+    		return;
+    	if(Squares[y][x].Color==1) //If color is white
 		{
 		Squares[y-1][x+1]=new Soldier();
 		Squares[y-1][x+1].LocationX=x+1;
@@ -147,10 +207,10 @@ public class Board {
 		}
 		else //if color is black
 		{
-		Squares[y+1][x+1]=new Soldier();
-		Squares[y+1][x+1].LocationX=x+1;
-		Squares[y+1][x+1].LocationY=y+1;
-		Squares[y+1][x+1].Color=2;
+		Squares[y+1][x-1]=new Soldier();
+		Squares[y+1][x-1].LocationX=x+1;
+		Squares[y+1][x-1].LocationY=y+1;
+		Squares[y+1][x-1].Color=2;
 		Squares[y][x]=null;
 		}
 
@@ -158,6 +218,8 @@ public class Board {
 
 	void EatLeftForward(int y, int x)
 	{
+    	if(Squares[y][x]==null)
+    		return;
 		if(Squares[y][x].Color==1) //If color is white
 		{
 		Squares[y-2][x-2]=new Soldier();
@@ -184,6 +246,8 @@ public class Board {
 
 	void EatRightForward(int y, int x)
 	{
+    	if(Squares[y][x]==null)
+    		return;
 		if(Squares[y][x].Color==1) //If color is white
 		{
 		Squares[y-2][x+2]=new Soldier();
