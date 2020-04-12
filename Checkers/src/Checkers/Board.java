@@ -175,9 +175,7 @@ public class Board {
 		if(Squares[y][x].Color==1) //If color is white
 		{
 		Squares[y-1][x-1]=new Soldier();
-		Squares[y-1][x-1].LocationX=x-1;
-		Squares[y-1][x-1].LocationY=y-1;
-		Squares[y-1][x-1].Color=1;
+		Squares[y][x].Copy(Squares[y-1][x-1]);
 		Squares[y][x]=null;
 		KingCheck(y-1,x-1);//King Check
 			
@@ -186,9 +184,7 @@ public class Board {
 		else //if color is black
 		{
 		Squares[y+1][x+1]=new Soldier();
-		Squares[y+1][x+1].LocationX=x+1;
-		Squares[y+1][x+1].LocationY=y+1;
-		Squares[y+1][x+1].Color=2;
+		Squares[y][x].Copy(Squares[y+1][x+1]);
 		Squares[y][x]=null;
 		KingCheck(y+1,x+1);//King Check
 
@@ -203,9 +199,7 @@ public class Board {
     	if(Squares[y][x].Color==1) //If color is white
 		{
 		Squares[y-1][x+1]=new Soldier();
-		Squares[y-1][x+1].LocationX=x+1;
-		Squares[y-1][x+1].LocationY=y-1;
-		Squares[y-1][x+1].Color=1;
+		Squares[y][x].Copy(Squares[y-1][x+1]);
 		Squares[y][x]=null;
 		KingCheck(y-1,x+1);//King Check
 
@@ -214,9 +208,7 @@ public class Board {
 		else //if color is black
 		{
 		Squares[y+1][x-1]=new Soldier();
-		Squares[y+1][x-1].LocationX=x+1;
-		Squares[y+1][x-1].LocationY=y+1;
-		Squares[y+1][x-1].Color=2;
+		Squares[y][x].Copy(Squares[y+1][x+1]);
 		KingCheck(y+1,x-1);//King Check
 		Squares[y][x]=null;
 		}
@@ -231,9 +223,7 @@ public class Board {
 		if(Squares[y][x].Color==1) //If color is white
 		{
 		Squares[y-2][x-2]=new Soldier();
-		Squares[y-2][x-2].LocationX=x-2;
-		Squares[y-2][x-2].LocationY=y-2;
-		Squares[y-2][x-2].Color=1;
+		Squares[y][x].Copy(Squares[y-2][x-2]);
 		Squares[y][x]=null;
 		Squares[y-1][x-1]=null;
 		KingCheck(y-2,x-2);//King Check
@@ -243,9 +233,7 @@ public class Board {
 		else //if color is black
 		{
 		Squares[y+2][x+2]=new Soldier();
-		Squares[y+2][x+2].LocationX=x+2;
-		Squares[y+2][x+2].LocationY=y-2;
-		Squares[y+2][x+2].Color=2;
+		Squares[y][x].Copy(Squares[y+2][x+2]);
 		Squares[y][x]=null;
 		Squares[y+1][x+1]=null;
 		KingCheck(y+2,x+2);//King Check
@@ -262,9 +250,6 @@ public class Board {
 		{
 		Squares[y-2][x+2]=new Soldier();
 		Squares[y][x].Copy(Squares[y-2][x+2]);
-		//Squares[y-2][x+2].LocationX=x+2;
-		//Squares[y-2][x+2].LocationY=y-2;
-		//Squares[y-2][x+2].Color=1;
 		Squares[y][x]=null;
 		Squares[y-1][x+1]=null;
 		KingCheck(y-2,x+2);//King Check
@@ -275,9 +260,7 @@ public class Board {
 		else //if color is black
 		{
 		Squares[y+2][x-2]=new Soldier();
-		Squares[y+2][x-2].LocationX=x-2;
-		Squares[y+2][x-2].LocationY=y+2;
-		Squares[y+2][x-2].Color=2;
+		Squares[y][x].Copy(Squares[y+2][x-2]);
 		Squares[y][x]=null;
 		Squares[y+1][x-1]=null;
 		KingCheck(y+2,x-2);//King Check
