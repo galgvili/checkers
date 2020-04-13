@@ -44,78 +44,122 @@ public class Board {
         		else
         		System.out.print(Squares[y][x].Color+" | ");
         	}
-        	System.out.println("\n");
+        	System.out.print("\n\n");
         	}
 
  }
     
-    int MoveOptions(int y,int x) //Check move options and return code
-    {
-    	int code=0;
-    	if(RightMoveChecker(y,x)==1)
-    		code++;
-    	if(LeftMoveChecker(y,x)==1)
-    		code+=2;
-    	if(RightEatChecker(y,x)==1)
-    		code+=10;
-    	if(LeftEatChecker(y,x)==1)
-    		code+=20;
-    	return code;  				
-    	//code values: 1=Only right|2=Only left|3=Right and Left|10=Only eat left|20=Only eat left|
-    	//30=Eat right and left|12=Eat right and move left|21=Eat left and move right
-	
+    void MoveOptions(int y,int x) //Check move options and print them
+    {   	
+    	if(Squares[y][x]==null)
+    		return;
+
+    	if(Squares[y][x].Color==1) 
+    	{
+    	if(WhiteRightMoveChecker(y,x)==1)
+    		System.out.print("(1) Right\n");
+    	if(WhiteLeftMoveChecker(y,x)==1)
+			System.out.print("(2) Left\n");
+    	if(WhiteRightEatChecker(y,x)==1)
+			System.out.print("(3) Jump Right\n");
+    	if(WhiteLeftEatChecker(y,x)==1)
+			System.out.print("(4) Jump Left\n");
+    	if(Squares[y][x].Is_King==true) 
+    	{
+        	if(BlackRightMoveChecker(y,x)==1)
+        		System.out.print("(5) Right Backward\n");
+        	if(BlackLeftMoveChecker(y,x)==1)
+    			System.out.print("(6) Left Backward\n");
+        	if(BlackRightEatChecker(y,x)==1)
+    			System.out.print("(7) Jump Right Backward\n");
+        	if(BlackLeftEatChecker(y,x)==1)
+    			System.out.print("(8) Jump Left Backward\n");        		
+
+    		
+    	}
+
+    	}
+    	else 
+    	{    	
+    		if(BlackRightMoveChecker(y,x)==1)
+    			System.out.print("(1) Right\n");
+    		if(BlackLeftMoveChecker(y,x)==1)
+    			System.out.print("(2) Left\n");
+    		if(BlackRightEatChecker(y,x)==1)
+    			System.out.print("(3) Jump Right\n");
+    		if(BlackLeftEatChecker(y,x)==1)
+    			System.out.print("(4) Jump Left\n");
+        	if(Squares[y][x].Is_King==true) 
+        	{
+            	if(WhiteRightMoveChecker(y,x)==1)
+            		System.out.print("(5) Right Backward\n");
+            	if(WhiteLeftMoveChecker(y,x)==1)
+        			System.out.print("(6) Left Backward\n");
+            	if(WhiteRightEatChecker(y,x)==1)
+        			System.out.print("(7) Jump Right Backward\n");
+            	if(WhiteLeftEatChecker(y,x)==1)
+        			System.out.print("(8) Jump Left Backward\n");        		
+        	}
+			System.out.print("(9) Cacnel\n");
+
+
+}
+
     	
   	
     }
-    int RightMoveChecker(int y, int x)//Check if can move right, 0=can't move, 1=can move, 2=can eat 
+    int WhiteRightMoveChecker(int y, int x)//Check if white can move right, 0=can't move, 1=can move 
     {
     	if(Squares[y][x]==null)
     		return 0;
-		if(Squares[y][x].Color==1) //If color is white
-		{
-
     	if(x==7||y==0)//Check if on board boundaries 
     		return 0;
     	if(Squares[y-1][x+1]==null)
     		return 1;
-		}
-		else//If color is black
-		{
-	    	if(x==0||y==7)//Check if on board boundaries 
-	    		return 0;
-	    	if(Squares[y+1][x-1]==null)
-	    		return 1;
-		
-		}
     	return 0;	
     	
     }
-    int LeftMoveChecker(int y, int x)//Check if can move left, 0=can't move, 1=can move, 2=can eat 
+    
+    int BlackRightMoveChecker(int y, int x)//Check if black can move right, 0=can't move, 1=can move 
+	{
+    	if(Squares[y][x]==null)
+    		return 0;
+    	if(x==0||y==7)//Check if on board boundaries 
+    		return 0;
+    	if(Squares[y+1][x-1]==null)
+    		return 1;
+    	return 0;	
+
+	
+	}
+
+    int WhiteLeftMoveChecker(int y, int x)//Check if can move left, 0=can't move, 1=can move
     {
     	if(Squares[y][x]==null)
     		return 0;
-		if(Squares[y][x].Color==1) //If color is white
-		{
-    	if(x==0||y==7)//Check if on board boundaries 
+    	if(x==0||y==0)//Check if on board boundaries 
     		return 0;
     	if(Squares[y-1][x-1]==null)
     		return 1;
-		}
-		else //If color is black
-		{
-	    	if(x==7||y==0)//Check if on board boundaries 
-	    		return 0;
-	    	if(Squares[y+1][x+1]==null)
-	    		return 1;
-		}
     	return 0;	
     }
-    int RightEatChecker(int y, int x)
+
+    int BlackLeftMoveChecker(int y, int x)//Check if can move left, 0=can't move, 1=can move
+{
+	if(Squares[y][x]==null)
+		return 0;
+	if(x==7||y==0)//Check if on board boundaries 
+		return 0;
+	if(Squares[y+1][x+1]==null)
+		return 1;
+	return 0;
+	
+}
+
+    int WhiteRightEatChecker(int y, int x)//Check if white can eat right, 0=can't eat, 1=can eat;
     {
     	if(Squares[y][x]==null)
     		return 0;
-		if(Squares[y][x].Color==1) //If color is white
-		{
     	if(x>5||y<2)//Check if on board boundaries 
     		return 0;
     	if(Squares[y-1][x+1]==null)//Check if right square is empty
@@ -124,27 +168,27 @@ public class Board {
     		return 0;
     	if(Squares[y-2][x+2]!=null)//Check if the right of the right square is not empty
     		return 0;
-		}
-		else //If color is black
-		{
-	    	if(x<2||y>5)//Check if on board boundaries 
-	    		return 0;
-	    	if(Squares[y+1][x-1]==null)//Check if right square is empty
-	    		return 0;
-	    	if(Squares[y][x].Color==Squares[y+1][x-1].Color)//Check if right square is the same color
-	    		return 0;
-	    	if(Squares[y+2][x-2]!=null)//Check if the right of the right square is not empty
-	    		return 0; 	
-			
-		}
     	return 1;  	
     }
-    int LeftEatChecker(int y, int x)
+    
+    int BlackRightEatChecker(int y, int x)//Check if black can eat right, 0=can't eat, 1=can eat;
+    {
+    	if(Squares[y][x]==null)
+    		return 0;
+    	if(x<2||y>5)//Check if on board boundaries 
+    		return 0;
+    	if(Squares[y+1][x-1]==null)//Check if right square is empty
+    		return 0;
+    	if(Squares[y][x].Color==Squares[y+1][x-1].Color)//Check if right square is the same color
+    		return 0;
+    	if(Squares[y+2][x-2]!=null)//Check if the right of the right square is not empty
+    		return 0; 		
+	return 1;  	
+    }
+    int WhiteLeftEatChecker(int y, int x)//Check if white can eat right, 0=can't eat, 1=can eat;
     {
     	if(Squares[y][x]==null)//if square is empty
     		return 0;
-		if(Squares[y][x].Color==1) //If color is white
-		{
     	if(x<2||y<2)
     		return 0;
     	if(Squares[y-1][x-1]==null)
@@ -153,124 +197,130 @@ public class Board {
     		return 0;
     	if(Squares[y-2][x-2]!=null)//Check if the left of the left square is not empty
     		return 0;
-		}
-		else //If color is black
-		{
-	    	if(x>5||y>5)
-	    		return 0;
-	    	if(Squares[y+1][x+1]==null)
-	    		return 0;
-	    	if(Squares[y][x].Color==Squares[y+1][x+1].Color)//Check if left square is the same color
-	    		return 0;
-	    	if(Squares[y+2][x+2]!=null)//Check if the left of the left square is not empty
-	    		return 0;		
-		}
     	return 1;  	
     }
+    
+    int BlackLeftEatChecker(int y, int x)//Check if white can eat left, 0=can't eat, 1=can eat;
+    
+    {
+    	if(Squares[y][x]==null)//if square is empty
+    		return 0;
+    	if(x>5||y>5)
+    		return 0;
+    	if(Squares[y+1][x+1]==null)
+    		return 0;
+    	if(Squares[y][x].Color==Squares[y+1][x+1].Color)//Check if left square is the same color
+    		return 0;
+    	if(Squares[y+2][x+2]!=null)//Check if the left of the left square is not empty
+    		return 0;		
+	return 1;  	
 
-	void MoveLeftForward(int y, int x)
+    	
+    }
+
+    
+    
+    
+	void WhiteMoveRightForward(int y, int x)
 	{
     	if(Squares[y][x]==null)
     		return;
-		if(Squares[y][x].Color==1) //If color is white
-		{
-		Squares[y-1][x-1]=new Soldier();
-		Squares[y][x].Copy(Squares[y-1][x-1]);
-		Squares[y][x]=null;
-		KingCheck(y-1,x-1);//King Check
-			
-		
-		}
-		else //if color is black
-		{
-		Squares[y+1][x+1]=new Soldier();
-		Squares[y][x].Copy(Squares[y+1][x+1]);
-		Squares[y][x]=null;
-		KingCheck(y+1,x+1);//King Check
-
-		}
-
-	}
-
-	void MoveRightForward(int y, int x)
-	{
-    	if(Squares[y][x]==null)
-    		return;
-    	if(Squares[y][x].Color==1) //If color is white
-		{
 		Squares[y-1][x+1]=new Soldier();
 		Squares[y][x].Copy(Squares[y-1][x+1]);
 		Squares[y][x]=null;
 		KingCheck(y-1,x+1);//King Check
 
 
-		}
-		else //if color is black
-		{
-		Squares[y+1][x-1]=new Soldier();
-		Squares[y][x].Copy(Squares[y+1][x+1]);
-		KingCheck(y+1,x-1);//King Check
-		Squares[y][x]=null;
-		}
-
 
 	}
-
-	void EatLeftForward(int y, int x)
+	void BlackMoveRightForward(int y, int x)
 	{
     	if(Squares[y][x]==null)
     		return;
-		if(Squares[y][x].Color==1) //If color is white
-		{
+		Squares[y+1][x-1]=new Soldier();
+		Squares[y][x].Copy(Squares[y+1][x-1]);
+		KingCheck(y+1,x-1);//King Check
+		Squares[y][x]=null;
+			}
+
+	void WhiteMoveLeftForward(int y, int x)
+	{
+    	if(Squares[y][x]==null)
+    		return;
+		Squares[y-1][x-1]=new Soldier();
+		Squares[y][x].Copy(Squares[y-1][x-1]);
+		Squares[y][x]=null;
+		KingCheck(y-1,x-1);//King Check
+	}
+
+
+	void BlackMoveLeftForward(int y, int x)
+	{
+    	if(Squares[y][x]==null)
+    		return;
+		Squares[y+1][x+1]=new Soldier();
+		Squares[y][x].Copy(Squares[y+1][x+1]);
+		Squares[y][x]=null;
+		KingCheck(y+1,x+1);//King Check
+	}
+
+
+	void WhiteEatLeftForward(int y, int x)
+	{
+    	if(Squares[y][x]==null)
+    		return;
 		Squares[y-2][x-2]=new Soldier();
 		Squares[y][x].Copy(Squares[y-2][x-2]);
 		Squares[y][x]=null;
 		Squares[y-1][x-1]=null;
 		KingCheck(y-2,x-2);//King Check
-
-		
 		}
-		else //if color is black
-		{
+
+	
+
+	
+	void BlackEatLeftForward(int y, int x)
+	{
+    	if(Squares[y][x]==null)
+    		return;
 		Squares[y+2][x+2]=new Soldier();
 		Squares[y][x].Copy(Squares[y+2][x+2]);
 		Squares[y][x]=null;
 		Squares[y+1][x+1]=null;
 		KingCheck(y+2,x+2);//King Check
 
-		}
 
 	}
 
-	void EatRightForward(int y, int x)
+	
+	
+	void WhiteEatRightForward(int y, int x)
 	{
     	if(Squares[y][x]==null)
     		return;
-		if(Squares[y][x].Color==1) //If color is white
-		{
 		Squares[y-2][x+2]=new Soldier();
 		Squares[y][x].Copy(Squares[y-2][x+2]);
 		Squares[y][x]=null;
 		Squares[y-1][x+1]=null;
 		KingCheck(y-2,x+2);//King Check
+	}
 
 
-		
-		}
-		else //if color is black
-		{
+	void BlackEatRightForward(int y, int x)
+	{
+    	if(Squares[y][x]==null)
+    		return;
 		Squares[y+2][x-2]=new Soldier();
 		Squares[y][x].Copy(Squares[y+2][x-2]);
 		Squares[y][x]=null;
 		Squares[y+1][x-1]=null;
 		KingCheck(y+2,x-2);//King Check
 
-		}
-
 	}
 
-	void KingCheck(int y, int x) {
-	if(y==0&&Squares[y][x].Color==1) {
+	
+void KingCheck(int y, int x) {
+	if(Squares[y][x].Is_King==false&&y==0&&Squares[y][x].Color==1) {
 		Squares[y][x]=new King();
 		Squares[y][x].Color=1;
 		Squares[y][x].LocationX=x;
@@ -279,7 +329,7 @@ public class Board {
 		
 	}
 	
-	if(y==7&&Squares[y][x].Color==2) 
+	if(Squares[y][x].Is_King==false&&y==7&&Squares[y][x].Color==2) 
 	{
 		Squares[y][x]=new King();
 		Squares[y][x].Color=2;
@@ -296,5 +346,4 @@ public class Board {
 
 
 }
-
 
