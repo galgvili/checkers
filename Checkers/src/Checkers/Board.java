@@ -48,66 +48,8 @@ public class Board {
         	}
 
  }
-    
-    void MoveOptions(int y,int x) //Check move options and print them
-    {   	
-    	if(Squares[y][x]==null)
-    		return;
-
-    	if(Squares[y][x].Color==1) 
-    	{
-    	if(WhiteRightMoveChecker(y,x)==1)
-    		System.out.print("(1) Right\n");
-    	if(WhiteLeftMoveChecker(y,x)==1)
-			System.out.print("(2) Left\n");
-    	if(WhiteRightEatChecker(y,x)==1)
-			System.out.print("(3) Jump Right\n");
-    	if(WhiteLeftEatChecker(y,x)==1)
-			System.out.print("(4) Jump Left\n");
-    	if(Squares[y][x].Is_King==true) 
-    	{
-        	if(BlackRightMoveChecker(y,x)==1)
-        		System.out.print("(5) Right Backward\n");
-        	if(BlackLeftMoveChecker(y,x)==1)
-    			System.out.print("(6) Left Backward\n");
-        	if(BlackRightEatChecker(y,x)==1)
-    			System.out.print("(7) Jump Right Backward\n");
-        	if(BlackLeftEatChecker(y,x)==1)
-    			System.out.print("(8) Jump Left Backward\n");        		
-
-    		
-    	}
-
-    	}
-    	else 
-    	{    	
-    		if(BlackRightMoveChecker(y,x)==1)
-    			System.out.print("(1) Right\n");
-    		if(BlackLeftMoveChecker(y,x)==1)
-    			System.out.print("(2) Left\n");
-    		if(BlackRightEatChecker(y,x)==1)
-    			System.out.print("(3) Jump Right\n");
-    		if(BlackLeftEatChecker(y,x)==1)
-    			System.out.print("(4) Jump Left\n");
-        	if(Squares[y][x].Is_King==true) 
-        	{
-            	if(WhiteRightMoveChecker(y,x)==1)
-            		System.out.print("(5) Right Backward\n");
-            	if(WhiteLeftMoveChecker(y,x)==1)
-        			System.out.print("(6) Left Backward\n");
-            	if(WhiteRightEatChecker(y,x)==1)
-        			System.out.print("(7) Jump Right Backward\n");
-            	if(WhiteLeftEatChecker(y,x)==1)
-        			System.out.print("(8) Jump Left Backward\n");        		
-        	}
-			System.out.print("(9) Cacnel\n");
-
-
-}
-
-    	
+       	
   	
-    }
     int WhiteRightMoveChecker(int y, int x)//Check if white can move right, 0=can't move, 1=can move 
     {
     	if(Squares[y][x]==null)
@@ -148,7 +90,7 @@ public class Board {
 {
 	if(Squares[y][x]==null)
 		return 0;
-	if(x==7||y==0)//Check if on board boundaries 
+	if(x==7||y==7)//Check if on board boundaries 
 		return 0;
 	if(Squares[y+1][x+1]==null)
 		return 1;
