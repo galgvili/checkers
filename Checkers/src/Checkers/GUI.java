@@ -12,7 +12,7 @@ import javax.swing.border.Border;
 public class GUI   {
 
 	GameManager New_Game =new GameManager();
-	JButton JSquares[][]=new JButton[8][8];
+	GUI_Square JSquares[][]=new GUI_Square[8][8];
 
 
 void GameStart ()
@@ -58,9 +58,7 @@ for(y=0;y<8;y++) {
 		temp=Color.BLACK;
 
 	for(x=0;x<8;x++) {
-	JSquares[y][x]=new JButton();
-	JSquares[y][x].setBackground(temp);
-	JSquares[y][x].setEnabled(false);
+	JSquares[y][x]=new GUI_Square(x,y,temp);
 	
 	
 	if(temp==Color.BLACK) 
@@ -69,18 +67,18 @@ for(y=0;y<8;y++) {
 			if(board.Squares[y][x].Color==1) 
 			{
 				GUI_Pawn Soldier=new GUI_Pawn(x,y,Color.WHITE);
-				JSquares[y][x].add(Soldier.Pawn);
+				JSquares[y][x].JSquare.add(Soldier.Pawn);
 
 			}
 			else 
 				{
 					GUI_Pawn Soldier=new GUI_Pawn(x,y,Color.BLACK);
-					JSquares[y][x].add(Soldier.Pawn);
+					JSquares[y][x].JSquare.add(Soldier.Pawn);
 				}
 
 			}
 	}
-		pane.add(JSquares[y][x]);
+		pane.add(JSquares[y][x].JSquare);
 
 		
 		if(temp.equals(Color.BLACK))
@@ -94,8 +92,68 @@ for(y=0;y<8;y++) {
 	}
 
 
+private class GUI_Square  {
+	JButton JSquare=new JButton();
+	int PrevX;
+	int PrevY;
+	Color PrevColor;
+	boolean Eat=false;
+	int LocationX;
+	int LocationY;
+	Color Color;
+
+	GUI_Square(int x,int y,Color COLOR)
+	{
+		LocationX=x;
+		LocationY=y;
+		Color=COLOR;
+		JSquare.setBackground(COLOR);
+		JSquare.setEnabled(false);
+		JSquare.addActionListener(new Actions());
+
+	}
+	private class Actions implements ActionListener {
+
+	@Override
+	public void actionPerformed(ActionEvent E) {
+		if(JSquare.getBackground()==Color.LIGHT_GRAY) 
+		{
+			
+			ReplacePawn(LocationX,LocationY,PrevX,PrevY,PrevColor,Eat);
+			
 
 
+
+		}
+		
+	}
+	
+	}
+		
+
+
+
+}
+
+void ReplacePawn(int LocationX,int LocationY,int PrevX,int PrevY,Color PrevColor,boolean Eat) 
+{
+	GUI_Pawn Soldier=new GUI_Pawn(LocationX,LocationY,PrevColor);
+	JSquares[LocationY][LocationX].JSquare.add(Soldier.Pawn);
+	ClearMarks(New_Game.Game);
+	JSquares[PrevY][PrevX].JSquare.removeAll();
+	if(Eat==true)
+	{
+		JSquares[((PrevY+LocationY)/2)][((PrevX+LocationX)/2)].JSquare.removeAll();
+		JSquares[((PrevY+LocationY)/2)][((PrevX+LocationX)/2)].JSquare.revalidate();
+		JSquares[((PrevY+LocationY)/2)][((PrevX+LocationX)/2)].JSquare.repaint();
+	}
+	JSquares[PrevY][PrevX].JSquare.repaint();
+	JSquares[LocationY][LocationX].JSquare.revalidate();
+	JSquares[PrevY][PrevX].JSquare.repaint();
+	JSquares[LocationY][LocationX].JSquare.repaint();
+	New_Game.Game.MovePawn(PrevX, PrevY, LocationX, LocationY);
+	
+}
 private class GUI_Pawn  {
 
 	JButton Pawn=new JButton();
@@ -117,42 +175,97 @@ private class GUI_Pawn  {
 	@Override
 	public void actionPerformed(ActionEvent E) {
 		
+			
 		ClearMarks(New_Game.Game);
 		if(Color==Color.WHITE) {
+
 		if(New_Game.Game.WhiteRightMoveChecker(LocationY,LocationX)==1) {
-			JSquares[LocationY-1][LocationX+1].setBackground(Color.LIGHT_GRAY);
-			JSquares[LocationY-1][LocationX+1].setEnabled(true);
+			JSquares[LocationY-1][LocationX+1].JSquare.setBackground(Color.LIGHT_GRAY);
+			JSquares[LocationY-1][LocationX+1].JSquare.setEnabled(true);
+			JSquares[LocationY-1][LocationX+1].PrevX=LocationX;
+			JSquares[LocationY-1][LocationX+1].PrevY=LocationY;
+			JSquares[LocationY-1][LocationX+1].PrevColor=Color;
+
+
 }
 		if(New_Game.Game.WhiteLeftMoveChecker(LocationY,LocationX)==1) {
-			JSquares[LocationY-1][LocationX-1].setBackground(Color.LIGHT_GRAY);
-			JSquares[LocationY-1][LocationX-1].setEnabled(true);
+			JSquares[LocationY-1][LocationX-1].JSquare.setBackground(Color.LIGHT_GRAY);
+			JSquares[LocationY-1][LocationX-1].JSquare.setEnabled(true);
+			JSquares[LocationY-1][LocationX-1].PrevX=LocationX;
+			JSquares[LocationY-1][LocationX-1].PrevY=LocationY;
+			JSquares[LocationY-1][LocationX-1].PrevColor=Color;
+			
+
+
 }
 		if(New_Game.Game.WhiteRightEatChecker(LocationY,LocationX)==1) {
-			JSquares[LocationY-2][LocationX+2].setBackground(Color.LIGHT_GRAY);
-			JSquares[LocationY-2][LocationX+2].setEnabled(true);
+			JSquares[LocationY-2][LocationX+2].JSquare.setBackground(Color.LIGHT_GRAY);
+			JSquares[LocationY-2][LocationX+2].JSquare.setEnabled(true);
+			JSquares[LocationY-2][LocationX+2].PrevX=LocationX;
+			JSquares[LocationY-2][LocationX+2].PrevY=LocationY;
+			JSquares[LocationY-2][LocationX+2].PrevColor=Color;
+			JSquares[LocationY-2][LocationX+2].Eat=true; 
+
+
+
+
 }
 		if(New_Game.Game.WhiteLeftEatChecker(LocationY,LocationX)==1) {
-			JSquares[LocationY-2][LocationX-2].setBackground(Color.LIGHT_GRAY);
-			JSquares[LocationY-2][LocationX-2].setEnabled(true);
+			JSquares[LocationY-2][LocationX-2].JSquare.setBackground(Color.LIGHT_GRAY);
+			JSquares[LocationY-2][LocationX-2].JSquare.setEnabled(true);
+			JSquares[LocationY-2][LocationX-2].PrevX=LocationX;
+			JSquares[LocationY-2][LocationX-2].PrevY=LocationY;
+			JSquares[LocationY-2][LocationX-2].PrevColor=Color;
+			JSquares[LocationY-2][LocationX-2].Eat=true; 
+
+
+
 }
 		}
 		else
 		{
 			if(New_Game.Game.BlackRightMoveChecker(LocationY,LocationX)==1) {
-				JSquares[LocationY+1][LocationX-1].setBackground(Color.LIGHT_GRAY);
-				JSquares[LocationY+1][LocationX-1].setEnabled(true);
+				JSquares[LocationY+1][LocationX-1].JSquare.setBackground(Color.LIGHT_GRAY);
+				JSquares[LocationY+1][LocationX-1].JSquare.setEnabled(true);
+				JSquares[LocationY+1][LocationX-1].PrevX=LocationX;
+				JSquares[LocationY+1][LocationX-1].PrevY=LocationY;
+				JSquares[LocationY+1][LocationX-1].PrevColor=Color;
+				
+
 }
 			if(New_Game.Game.BlackLeftMoveChecker(LocationY,LocationX)==1) {
-				JSquares[LocationY+1][LocationX+1].setBackground(Color.LIGHT_GRAY);
-				JSquares[LocationY+1][LocationX+1].setEnabled(true);
+				JSquares[LocationY+1][LocationX+1].JSquare.setBackground(Color.LIGHT_GRAY);
+				JSquares[LocationY+1][LocationX+1].JSquare.setEnabled(true);
+				JSquares[LocationY+1][LocationX+1].PrevX=LocationX;
+				JSquares[LocationY+1][LocationX+1].PrevY=LocationY;
+				JSquares[LocationY+1][LocationX+1].PrevColor=Color;
+
+
+
 		}
 			if(New_Game.Game.BlackRightEatChecker(LocationY,LocationX)==1) { 
-				JSquares[LocationY+2][LocationX-2].setBackground(Color.LIGHT_GRAY);
-				JSquares[LocationY+2][LocationX-2].setEnabled(true);
+				JSquares[LocationY+2][LocationX-2].JSquare.setBackground(Color.LIGHT_GRAY);
+				JSquares[LocationY+2][LocationX-2].JSquare.setEnabled(true);
+				JSquares[LocationY+2][LocationX-2].PrevX=LocationX;
+				JSquares[LocationY+2][LocationX-2].PrevY=LocationY;
+				JSquares[LocationY+2][LocationX-2].PrevColor=Color;
+				JSquares[LocationY+2][LocationX-2].Eat=true; 
+
+
+
+
 }
 			if(New_Game.Game.BlackLeftEatChecker(LocationY,LocationX)==1) {
-				JSquares[LocationY+2][LocationX+2].setBackground(Color.LIGHT_GRAY);
-				JSquares[LocationY+2][LocationX+2].setEnabled(true);
+				JSquares[LocationY+2][LocationX+2].JSquare.setBackground(Color.LIGHT_GRAY);
+				JSquares[LocationY+2][LocationX+2].JSquare.setEnabled(true);
+				JSquares[LocationY+2][LocationX+2].PrevX=LocationX;
+				JSquares[LocationY+2][LocationX+2].PrevY=LocationY;
+				JSquares[LocationY+2][LocationX+2].PrevColor=Color;
+				JSquares[LocationY+2][LocationX+2].Eat=true; 
+
+
+
+
 
 			}
 
@@ -162,24 +275,6 @@ private class GUI_Pawn  {
 			
 	}
 	
-	void ClearMarks(Board BOARD) 
-	{
-		int x=0,y=0;
-		for(y=0;y<8;y++) {
-			if(y%2==0) 
-				x=1;
-			else
-				x=0;
-			for(;x<8;x++) 
-			{
-			JSquares[y][x].setEnabled(false);
-			JSquares[y][x].setBackground(Color.BLACK);
-			x++;
-			}
-			}
-			
-		
-	}
 	
 
 	
@@ -210,10 +305,27 @@ private static class PawnShaping implements Border {
     }
 }
 
+void ClearMarks(Board BOARD) 
+{
+	int x=0,y=0;
+	for(y=0;y<8;y++) {
+		if(y%2==0) 
+			x=1;
+		else
+			x=0;
+		for(;x<8;x++) 
+		{
+		JSquares[y][x].JSquare.setEnabled(false);
+		JSquares[y][x].JSquare.setBackground(Color.BLACK);
+		x++;
+		}
+		}
+		
+	
 }
 
 
-
+}
 
 
 

@@ -49,7 +49,17 @@ public class Board {
 
  }
        	
-  	
+  	void MovePawn(int OldX,int OldY,int NewX,int NewY)
+  	{
+    	//if(Squares[OldX][OldY]==null)
+    		//return;
+		Squares[NewY][NewX]=new Soldier();
+		Squares[OldY][OldX].Copy(Squares[NewY][NewX]);
+		Squares[OldY][OldX]=null;
+		KingCheck(NewY,NewX);//King Check
+
+  		
+  	}
     int WhiteRightMoveChecker(int y, int x)//Check if white can move right, 0=can't move, 1=can move 
     {
     	if(Squares[y][x]==null)
