@@ -49,17 +49,20 @@ public class Board {
 
  }
        	
-  	void MovePawn(int OldX,int OldY,int NewX,int NewY)
+  	void MovePawn(int OldX,int OldY,int NewX,int NewY, boolean Eat)
   	{
     	//if(Squares[OldX][OldY]==null)
     		//return;
 		Squares[NewY][NewX]=new Soldier();
 		Squares[OldY][OldX].Copy(Squares[NewY][NewX]);
 		Squares[OldY][OldX]=null;
+		if(Eat==true)
+			Squares[(NewY+OldY)/2][(NewX+OldX)/2]=null;
+
 		KingCheck(NewY,NewX);//King Check
 
   		
-  	}
+  	}//
     int WhiteRightMoveChecker(int y, int x)//Check if white can move right, 0=can't move, 1=can move 
     {
     	if(Squares[y][x]==null)
@@ -172,7 +175,7 @@ public class Board {
 
     
     
-    
+    /*
 	void WhiteMoveRightForward(int y, int x)
 	{
     	if(Squares[y][x]==null)
@@ -269,15 +272,18 @@ public class Board {
 		KingCheck(y+2,x-2);//King Check
 
 	}
-
+*/
 	
-void KingCheck(int y, int x) {
-	if(Squares[y][x].Is_King==false&&y==0&&Squares[y][x].Color==1) {
+boolean KingCheck(int y, int x) {
+	if(Squares[y][x].Is_King==true)
+		return true;
+	if(y==0&&Squares[y][x].Color==1) {
 		Squares[y][x]=new King();
 		Squares[y][x].Color=1;
 		Squares[y][x].LocationX=x;
 		Squares[y][x].LocationY=y;
 		Squares[y][x].Is_King=true;
+		return true;
 		
 	}
 	
@@ -288,8 +294,9 @@ void KingCheck(int y, int x) {
 		Squares[y][x].LocationX=x;
 		Squares[y][x].LocationY=y;
 		Squares[y][x].Is_King=true;
-
+		return true;
 	}
+	return false;
 
 	
 	

@@ -90,6 +90,76 @@ for(y=0;y<8;y++) {
 					
 		}
 	}
+void ReplacePawn(int LocationX,int LocationY,int PrevX,int PrevY,Color PrevColor,boolean Eat) 
+{
+	GUI_Pawn Soldier=new GUI_Pawn(LocationX,LocationY,PrevColor);
+	JSquares[LocationY][LocationX].JSquare.add(Soldier.Pawn);
+	ClearMarks(New_Game.Game);
+	JSquares[PrevY][PrevX].JSquare.removeAll();
+	if(Eat==true)
+	{
+		JSquares[((PrevY+LocationY)/2)][((PrevX+LocationX)/2)].JSquare.removeAll();
+		JSquares[((PrevY+LocationY)/2)][((PrevX+LocationX)/2)].JSquare.revalidate();
+		JSquares[((PrevY+LocationY)/2)][((PrevX+LocationX)/2)].JSquare.repaint();
+	}
+	JSquares[PrevY][PrevX].JSquare.repaint();
+	JSquares[LocationY][LocationX].JSquare.revalidate();
+	JSquares[PrevY][PrevX].JSquare.repaint();
+	JSquares[LocationY][LocationX].JSquare.repaint();
+	New_Game.Game.MovePawn(PrevX, PrevY, LocationX, LocationY,Eat);
+	New_Game.Game.PrintBoard();
+	if(New_Game.Game.KingCheck(LocationY,LocationX)==true) 
+	{
+		JSquares[LocationY][LocationX].Is_King=true;
+	}
+	if(JSquares[PrevY][PrevX].Is_King==true)
+		JSquares[LocationY][LocationX].Is_King=true;
+
+			
+	
+}
+void ClearMarks(Board BOARD) 
+{
+	int x=0,y=0;
+	for(y=0;y<8;y++) {
+		if(y%2==0) 
+			x=1;
+		else
+			x=0;
+		for(;x<8;x++) 
+		{
+		JSquares[y][x].JSquare.setEnabled(false);
+		JSquares[y][x].JSquare.setBackground(Color.BLACK);
+		x++;
+		}
+		}
+		
+	
+}
+private static class PawnShaping implements Border {
+
+    private int radius;
+
+
+    PawnShaping(int radius) {
+        this.radius = radius;
+    }
+
+
+    public Insets getBorderInsets(Component c) {
+        return new Insets(this.radius+20, this.radius+20, this.radius, this.radius);
+    }
+
+
+    public boolean isBorderOpaque() {
+        return true;
+    }
+
+
+    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+        g.drawRoundRect(x, y, width-1, height-1, radius+20, radius+20);
+    }
+}
 
 
 private class GUI_Square  {
@@ -98,6 +168,7 @@ private class GUI_Square  {
 	int PrevY;
 	Color PrevColor;
 	boolean Eat=false;
+	boolean Is_King=false;
 	int LocationX;
 	int LocationY;
 	Color Color;
@@ -135,31 +206,13 @@ private class GUI_Square  {
 
 }
 
-void ReplacePawn(int LocationX,int LocationY,int PrevX,int PrevY,Color PrevColor,boolean Eat) 
-{
-	GUI_Pawn Soldier=new GUI_Pawn(LocationX,LocationY,PrevColor);
-	JSquares[LocationY][LocationX].JSquare.add(Soldier.Pawn);
-	ClearMarks(New_Game.Game);
-	JSquares[PrevY][PrevX].JSquare.removeAll();
-	if(Eat==true)
-	{
-		JSquares[((PrevY+LocationY)/2)][((PrevX+LocationX)/2)].JSquare.removeAll();
-		JSquares[((PrevY+LocationY)/2)][((PrevX+LocationX)/2)].JSquare.revalidate();
-		JSquares[((PrevY+LocationY)/2)][((PrevX+LocationX)/2)].JSquare.repaint();
-	}
-	JSquares[PrevY][PrevX].JSquare.repaint();
-	JSquares[LocationY][LocationX].JSquare.revalidate();
-	JSquares[PrevY][PrevX].JSquare.repaint();
-	JSquares[LocationY][LocationX].JSquare.repaint();
-	New_Game.Game.MovePawn(PrevX, PrevY, LocationX, LocationY);
-	
-}
 private class GUI_Pawn  {
 
 	JButton Pawn=new JButton();
 	int LocationX;
 	int LocationY;
 	Color Color;
+	
 	GUI_Pawn(int x,int y,Color COLOR)
 	{
 		LocationX=x;
@@ -168,7 +221,7 @@ private class GUI_Pawn  {
 		Pawn.setBackground(COLOR);
 		Pawn.setBorder(new PawnShaping(10));
 		Pawn.addActionListener(new Actions());
-
+			
 	}
 	private class Actions implements ActionListener {
 
@@ -177,7 +230,7 @@ private class GUI_Pawn  {
 		
 			
 		ClearMarks(New_Game.Game);
-		if(Color==Color.WHITE) {
+		if(Color==Color.WHITE||JSquares[LocationY][LocationX].Is_King==true) {
 
 		if(New_Game.Game.WhiteRightMoveChecker(LocationY,LocationX)==1) {
 			JSquares[LocationY-1][LocationX+1].JSquare.setBackground(Color.LIGHT_GRAY);
@@ -222,7 +275,7 @@ private class GUI_Pawn  {
 
 }
 		}
-		else
+		if(Color==Color.BLACK||JSquares[LocationY][LocationX].Is_King==true)
 		{
 			if(New_Game.Game.BlackRightMoveChecker(LocationY,LocationX)==1) {
 				JSquares[LocationY+1][LocationX-1].JSquare.setBackground(Color.LIGHT_GRAY);
@@ -280,49 +333,7 @@ private class GUI_Pawn  {
 	
 	}}
 
-private static class PawnShaping implements Border {
 
-    private int radius;
-
-
-    PawnShaping(int radius) {
-        this.radius = radius;
-    }
-
-
-    public Insets getBorderInsets(Component c) {
-        return new Insets(this.radius+20, this.radius+20, this.radius, this.radius);
-    }
-
-
-    public boolean isBorderOpaque() {
-        return true;
-    }
-
-
-    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-        g.drawRoundRect(x, y, width-1, height-1, radius+20, radius+20);
-    }
-}
-
-void ClearMarks(Board BOARD) 
-{
-	int x=0,y=0;
-	for(y=0;y<8;y++) {
-		if(y%2==0) 
-			x=1;
-		else
-			x=0;
-		for(;x<8;x++) 
-		{
-		JSquares[y][x].JSquare.setEnabled(false);
-		JSquares[y][x].JSquare.setBackground(Color.BLACK);
-		x++;
-		}
-		}
-		
-	
-}
 
 
 }
