@@ -13,6 +13,10 @@ public class GUI   {
 
 	GameManager New_Game =new GameManager();
 	GUI_Square JSquares[][]=new GUI_Square[8][8];
+	Container Center=new Container();
+	JFrame board=new JFrame();	
+
+
 
 
 void GameStart ()
@@ -20,21 +24,17 @@ void GameStart ()
 	 int rows=8, columns=8;
 
 	New_Game.Game_Run();
-
-
-	JFrame board=new JFrame();	
 	board.setLayout(new BorderLayout());
 	board.setSize(600, 600);
 	board.setBackground(Color.LIGHT_GRAY);
 	board.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	board.setVisible(true);
-	Container Center=new Container();
 	Center.setLayout(new GridLayout(rows,columns));
 	board.add(Center,BorderLayout.CENTER);
 	Center.setBackground(Color.GRAY);
 	BoardBuilder(Center,New_Game.Game);
-	JButton Start_Button=new JButton("Start Game");
-	board.add(Start_Button,BorderLayout.SOUTH);
+	GUI_Button Restart_Button=new GUI_Button(1);
+	board.add(Restart_Button.Button,BorderLayout.SOUTH);
 	board.setExtendedState(JFrame.MAXIMIZED_BOTH);//JFrame Bug Fix 
 	board.setExtendedState(JFrame.NORMAL); //JFrame Bug Fix
 	
@@ -45,11 +45,53 @@ void GameStart ()
 
 }
 
+void ResetBoard(Container pane,Board board) 
+{
+	int x=0,y=0;
+	Color temp;
+	for(y=0;y<8;y++) {
+		for(x=0;x<8;x++) {
+			if(board.Squares[y][x]!=null) {
+
+				JSquares[y][x].JSquare.removeAll();
+				JSquares[y][x].JSquare.revalidate();
+				JSquares[y][x].JSquare.repaint();
+				}
+
+		}}
+	board.InitiateBoard(board);
+
+	for(y=0;y<8;y++) {
+		if(y%2==0) 
+			temp=Color.WHITE;
+		else
+			temp=Color.BLACK;
+		for(x=0;x<8;x++) {
+			if(JSquares[y][x].JSquare.getBackground()==Color.BLACK) 
+			{
+				if(board.Squares[y][x]!=null) {
+					if(board.Squares[y][x].Color==1) 
+					{
+						GUI_Pawn Soldier=new GUI_Pawn(x,y,Color.WHITE);
+						JSquares[y][x].JSquare.add(Soldier.Pawn);
+					}
+					if(board.Squares[y][x].Color==2) 
+
+						{
+							GUI_Pawn Soldier=new GUI_Pawn(x,y,Color.BLACK);
+							JSquares[y][x].JSquare.add(Soldier.Pawn);
+						}
+				}
+					}
+
+			}}
+
+	}
 
 	
 void BoardBuilder(Container pane, Board board) 
 {
-	int x=0,y=0;
+int x=0,y=0;
 Color temp;
 for(y=0;y<8;y++) {
 	if(y%2==0) 
@@ -106,7 +148,7 @@ void ReplacePawn(int LocationX,int LocationY,int PrevX,int PrevY,Color PrevColor
 	JSquares[LocationY][LocationX].JSquare.revalidate();
 	JSquares[PrevY][PrevX].JSquare.repaint();
 	JSquares[LocationY][LocationX].JSquare.repaint();
-	New_Game.Game.MovePawn(PrevX, PrevY, LocationX, LocationY,Eat);
+	New_Game.MovePawn(PrevX, PrevY, LocationX, LocationY,Eat);
 	New_Game.Game.PrintBoard();
 	if(New_Game.Game.KingCheck(LocationY,LocationX)==true) 
 	{
@@ -335,8 +377,41 @@ private class GUI_Pawn  {
 
 
 
+private class GUI_Button {
+	int type=0;
+	JButton Button=new JButton();
+
+	GUI_Button(int TYPE)
+	{
+		type=TYPE;
+		Button.addActionListener(new Actions());
+		if(type==1) 
+		{
+			Button.setText("Restart");
+			
+		}
+		
+		
+		
+	}
+	private class Actions implements ActionListener {
+
+	@Override
+	public void actionPerformed(ActionEvent E) {
+		if(type==1) 
+		{
+			ResetBoard(Center,New_Game.Game);
+		}
+
+	}	}
+
+			
+			
+		}
+			
 
 }
+
 
 
 

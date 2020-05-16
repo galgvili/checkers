@@ -2,15 +2,23 @@ package Checkers;
 
 public class Board {
    Soldier Squares[][]=new Soldier[8][8];
+
    
-	Board InitiateBoard() //Reset board pawns positions 
+	void InitiateBoard(Board BOARD) //Reset board pawns positions 
     {
 		//Black=2, White=1, Blank=0
-        int x;
-    	Board BOARD=new Board();
+        int x,y;
+ 	   for(y=0;y<8;y+=1) 
+ 	   {
+ 		   for(x=0;x<8;x+=1) 
+ 		   {
+ 			   if(BOARD.Squares[y][x]!=null)
+ 				   BOARD.Squares[y][x]=null;
+ 		   }
+ 		   }
+y=0;
         for(x=0;x<7;x+=2) 
         	{
-    		int y=0;
         	BOARD.Squares[y][x+1]=new Soldier();
         	BOARD.Squares[y][x+1].Color=2;
         	BOARD.Squares[y+1][x]=new Soldier();
@@ -25,7 +33,6 @@ public class Board {
         	BOARD.Squares[y+7][x].Color=1;
         	
         	}
-        return BOARD;
         }
 
 	void PrintSquare(int y,int x) //Print specific board square.
@@ -49,20 +56,6 @@ public class Board {
 
  }
        	
-  	void MovePawn(int OldX,int OldY,int NewX,int NewY, boolean Eat)
-  	{
-    	//if(Squares[OldX][OldY]==null)
-    		//return;
-		Squares[NewY][NewX]=new Soldier();
-		Squares[OldY][OldX].Copy(Squares[NewY][NewX]);
-		Squares[OldY][OldX]=null;
-		if(Eat==true)
-			Squares[(NewY+OldY)/2][(NewX+OldX)/2]=null;
-
-		KingCheck(NewY,NewX);//King Check
-
-  		
-  	}//
     int WhiteRightMoveChecker(int y, int x)//Check if white can move right, 0=can't move, 1=can move 
     {
     	if(Squares[y][x]==null)
