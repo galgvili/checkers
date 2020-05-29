@@ -15,6 +15,12 @@ public class GUI   {
 	GUI_Square JSquares[][]=new GUI_Square[8][8];
 	Container Center=new Container();
 	JFrame board=new JFrame();	
+	 String BlackTurn="                  Black Turn",WhiteTurn="                  White Turn";
+		JLabel Turn_Status=new JLabel(WhiteTurn);
+
+	int Black_Pawns_Num=12;
+	int White_Pawns_Num=12;
+
 
 
 
@@ -34,16 +40,21 @@ void GameStart ()
 	Center.setBackground(Color.GRAY);
 	BoardBuilder(Center,New_Game.Game);
 	GUI_Button Restart_Button=new GUI_Button(1);
+	board.add(Turn_Status,BorderLayout.NORTH);
 	board.add(Restart_Button.Button,BorderLayout.SOUTH);
 	board.setExtendedState(JFrame.MAXIMIZED_BOTH);//JFrame Bug Fix 
 	board.setExtendedState(JFrame.NORMAL); //JFrame Bug Fix
+			
+		
+		
+			}
 	
 
 
 	
 
 
-}
+
 
 void ResetBoard(Container pane,Board board) 
 {
@@ -67,24 +78,29 @@ void ResetBoard(Container pane,Board board)
 		else
 			temp=Color.BLACK;
 		for(x=0;x<8;x++) {
-			if(JSquares[y][x].JSquare.getBackground()==Color.BLACK) 
+			JSquares[y][x].JSquare.setBackground(temp);
+			if(temp==Color.BLACK) 
 			{
 				if(board.Squares[y][x]!=null) {
 					if(board.Squares[y][x].Color==1) 
 					{
-						GUI_Pawn Soldier=new GUI_Pawn(x,y,Color.WHITE);
-						JSquares[y][x].JSquare.add(Soldier.Pawn);
+						JSquares[y][x].Set_Pawn(Color.WHITE);
 					}
 					if(board.Squares[y][x].Color==2) 
 
 						{
-							GUI_Pawn Soldier=new GUI_Pawn(x,y,Color.BLACK);
-							JSquares[y][x].JSquare.add(Soldier.Pawn);
+						JSquares[y][x].Set_Pawn(Color.BLACK);
+						JSquares[y][x].JPawn.Pawn.setEnabled(false);
 						}
 				}
 					}
+			if(temp.equals(Color.BLACK))
+				temp=Color.WHITE;
+				else
+					temp=Color.BLACK;
 
 			}}
+	
 
 	}
 
@@ -108,14 +124,13 @@ for(y=0;y<8;y++) {
 		if(board.Squares[y][x]!=null) {
 			if(board.Squares[y][x].Color==1) 
 			{
-				GUI_Pawn Soldier=new GUI_Pawn(x,y,Color.WHITE);
-				JSquares[y][x].JSquare.add(Soldier.Pawn);
+				JSquares[y][x].Set_Pawn(Color.WHITE);
 
 			}
 			else 
 				{
-					GUI_Pawn Soldier=new GUI_Pawn(x,y,Color.BLACK);
-					JSquares[y][x].JSquare.add(Soldier.Pawn);
+				JSquares[y][x].Set_Pawn(Color.BLACK);
+				JSquares[y][x].JPawn.Pawn.setEnabled(false);
 				}
 
 			}
@@ -132,10 +147,14 @@ for(y=0;y<8;y++) {
 					
 		}
 	}
+
 void ReplacePawn(int LocationX,int LocationY,int PrevX,int PrevY,Color PrevColor,boolean Eat) 
 {
-	GUI_Pawn Soldier=new GUI_Pawn(LocationX,LocationY,PrevColor);
-	JSquares[LocationY][LocationX].JSquare.add(Soldier.Pawn);
+	int y,x;
+	int NextColor=1;
+
+
+	JSquares[LocationY][LocationX].Set_Pawn(PrevColor);
 	ClearMarks(New_Game.Game);
 	JSquares[PrevY][PrevX].JSquare.removeAll();
 	if(Eat==true)
@@ -143,22 +162,86 @@ void ReplacePawn(int LocationX,int LocationY,int PrevX,int PrevY,Color PrevColor
 		JSquares[((PrevY+LocationY)/2)][((PrevX+LocationX)/2)].JSquare.removeAll();
 		JSquares[((PrevY+LocationY)/2)][((PrevX+LocationX)/2)].JSquare.revalidate();
 		JSquares[((PrevY+LocationY)/2)][((PrevX+LocationX)/2)].JSquare.repaint();
+		if(PrevColor==Color.black)
+			White_Pawns_Num--;
+		else
+			Black_Pawns_Num--;
+
 	}
 	JSquares[PrevY][PrevX].JSquare.repaint();
 	JSquares[LocationY][LocationX].JSquare.revalidate();
 	JSquares[PrevY][PrevX].JSquare.repaint();
 	JSquares[LocationY][LocationX].JSquare.repaint();
 	New_Game.MovePawn(PrevX, PrevY, LocationX, LocationY,Eat);
-	New_Game.Game.PrintBoard();
-	if(New_Game.Game.KingCheck(LocationY,LocationX)==true) 
+	if(New_Game.KingCheck(LocationY,LocationX)==true) 
 	{
 		JSquares[LocationY][LocationX].Is_King=true;
 	}
 	if(JSquares[PrevY][PrevX].Is_King==true)
 		JSquares[LocationY][LocationX].Is_King=true;
-
-			
 	
+	if(PrevColor==Color.black) 
+	{
+		if((Eat==true) &&(New_Game.BlackRightEatChecker(LocationY, LocationX)==1||New_Game.BlackLeftEatChecker(LocationY, LocationX)==1)) {
+			{
+				Turn_Status.setText(BlackTurn);
+				NextColor=2;
+			}
+		}
+		else 
+		{
+			NextColor=1;
+			Turn_Status.setText(WhiteTurn);	
+		}
+
+	}
+	else 
+	{
+		if((Eat==true) &&(New_Game.WhiteRightEatChecker(LocationY, LocationX)==1||New_Game.WhiteLeftEatChecker(LocationY, LocationX)==1)) {
+			{
+				Turn_Status.setText(WhiteTurn);	
+				NextColor=1;
+			}
+		}
+		else 
+		{
+			NextColor=2;
+			Turn_Status.setText(BlackTurn);
+		}
+	}
+		for( y=0;y<8;y++) {
+			for( x=0;x<8;x++) {
+				if(New_Game.Game.Squares[y][x]!=null) {
+					if(New_Game.Game.Squares[y][x].Color==NextColor) 
+						{
+						JSquares[y][x].JPawn.Pawn.setEnabled(true);
+						JSquares[y][x].JPawn.Pawn.revalidate();
+						JSquares[y][x].JPawn.Pawn.repaint();
+						}
+
+					else{
+						JSquares[y][x].JPawn.Pawn.setEnabled(false);
+						JSquares[y][x].JPawn.Pawn.revalidate();
+						JSquares[y][x].JPawn.Pawn.repaint();
+						}
+
+				}
+			}
+			}
+				
+		}
+
+void FinishGame() {
+	int x,y;
+	for( y=0;y<8;y++) {
+		for( x=0;x<8;x++) {
+			if(New_Game.Game.Squares[y][x]!=null) {
+					JSquares[y][x].JPawn.Pawn.setEnabled(true);
+					JSquares[y][x].JPawn.Pawn.revalidate();
+					JSquares[y][x].JPawn.Pawn.repaint();}
+
+			}}
+
 }
 void ClearMarks(Board BOARD) 
 {
@@ -214,6 +297,8 @@ private class GUI_Square  {
 	int LocationX;
 	int LocationY;
 	Color Color;
+	GUI_Pawn JPawn;
+
 
 	GUI_Square(int x,int y,Color COLOR)
 	{
@@ -225,20 +310,33 @@ private class GUI_Square  {
 		JSquare.addActionListener(new Actions());
 
 	}
+	void Set_Pawn(Color COLOR) 
+	{		
+		JPawn=new GUI_Pawn(LocationX,LocationY,COLOR);
+		JSquare.add(JPawn.Pawn);
+	}
+	
 	private class Actions implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent E) {
+		
 		if(JSquare.getBackground()==Color.LIGHT_GRAY) 
-		{
-			
 			ReplacePawn(LocationX,LocationY,PrevX,PrevY,PrevColor,Eat);
-			
 
-
-
+		if(Black_Pawns_Num==0)		{	
+			Turn_Status.setText("White Wins");
+			FinishGame();}
+		if(White_Pawns_Num==0) {
+			Turn_Status.setText("Black Wins");
+			FinishGame();	
 		}
 		
+
+
+
+			
+
 	}
 	
 	}
@@ -272,102 +370,7 @@ private class GUI_Pawn  {
 		
 			
 		ClearMarks(New_Game.Game);
-		if(Color==Color.WHITE||JSquares[LocationY][LocationX].Is_King==true) {
-
-		if(New_Game.Game.WhiteRightMoveChecker(LocationY,LocationX)==1) {
-			JSquares[LocationY-1][LocationX+1].JSquare.setBackground(Color.LIGHT_GRAY);
-			JSquares[LocationY-1][LocationX+1].JSquare.setEnabled(true);
-			JSquares[LocationY-1][LocationX+1].PrevX=LocationX;
-			JSquares[LocationY-1][LocationX+1].PrevY=LocationY;
-			JSquares[LocationY-1][LocationX+1].PrevColor=Color;
-
-
-}
-		if(New_Game.Game.WhiteLeftMoveChecker(LocationY,LocationX)==1) {
-			JSquares[LocationY-1][LocationX-1].JSquare.setBackground(Color.LIGHT_GRAY);
-			JSquares[LocationY-1][LocationX-1].JSquare.setEnabled(true);
-			JSquares[LocationY-1][LocationX-1].PrevX=LocationX;
-			JSquares[LocationY-1][LocationX-1].PrevY=LocationY;
-			JSquares[LocationY-1][LocationX-1].PrevColor=Color;
-			
-
-
-}
-		if(New_Game.Game.WhiteRightEatChecker(LocationY,LocationX)==1) {
-			JSquares[LocationY-2][LocationX+2].JSquare.setBackground(Color.LIGHT_GRAY);
-			JSquares[LocationY-2][LocationX+2].JSquare.setEnabled(true);
-			JSquares[LocationY-2][LocationX+2].PrevX=LocationX;
-			JSquares[LocationY-2][LocationX+2].PrevY=LocationY;
-			JSquares[LocationY-2][LocationX+2].PrevColor=Color;
-			JSquares[LocationY-2][LocationX+2].Eat=true; 
-
-
-
-
-}
-		if(New_Game.Game.WhiteLeftEatChecker(LocationY,LocationX)==1) {
-			JSquares[LocationY-2][LocationX-2].JSquare.setBackground(Color.LIGHT_GRAY);
-			JSquares[LocationY-2][LocationX-2].JSquare.setEnabled(true);
-			JSquares[LocationY-2][LocationX-2].PrevX=LocationX;
-			JSquares[LocationY-2][LocationX-2].PrevY=LocationY;
-			JSquares[LocationY-2][LocationX-2].PrevColor=Color;
-			JSquares[LocationY-2][LocationX-2].Eat=true; 
-
-
-
-}
-		}
-		if(Color==Color.BLACK||JSquares[LocationY][LocationX].Is_King==true)
-		{
-			if(New_Game.Game.BlackRightMoveChecker(LocationY,LocationX)==1) {
-				JSquares[LocationY+1][LocationX-1].JSquare.setBackground(Color.LIGHT_GRAY);
-				JSquares[LocationY+1][LocationX-1].JSquare.setEnabled(true);
-				JSquares[LocationY+1][LocationX-1].PrevX=LocationX;
-				JSquares[LocationY+1][LocationX-1].PrevY=LocationY;
-				JSquares[LocationY+1][LocationX-1].PrevColor=Color;
-				
-
-}
-			if(New_Game.Game.BlackLeftMoveChecker(LocationY,LocationX)==1) {
-				JSquares[LocationY+1][LocationX+1].JSquare.setBackground(Color.LIGHT_GRAY);
-				JSquares[LocationY+1][LocationX+1].JSquare.setEnabled(true);
-				JSquares[LocationY+1][LocationX+1].PrevX=LocationX;
-				JSquares[LocationY+1][LocationX+1].PrevY=LocationY;
-				JSquares[LocationY+1][LocationX+1].PrevColor=Color;
-
-
-
-		}
-			if(New_Game.Game.BlackRightEatChecker(LocationY,LocationX)==1) { 
-				JSquares[LocationY+2][LocationX-2].JSquare.setBackground(Color.LIGHT_GRAY);
-				JSquares[LocationY+2][LocationX-2].JSquare.setEnabled(true);
-				JSquares[LocationY+2][LocationX-2].PrevX=LocationX;
-				JSquares[LocationY+2][LocationX-2].PrevY=LocationY;
-				JSquares[LocationY+2][LocationX-2].PrevColor=Color;
-				JSquares[LocationY+2][LocationX-2].Eat=true; 
-
-
-
-
-}
-			if(New_Game.Game.BlackLeftEatChecker(LocationY,LocationX)==1) {
-				JSquares[LocationY+2][LocationX+2].JSquare.setBackground(Color.LIGHT_GRAY);
-				JSquares[LocationY+2][LocationX+2].JSquare.setEnabled(true);
-				JSquares[LocationY+2][LocationX+2].PrevX=LocationX;
-				JSquares[LocationY+2][LocationX+2].PrevY=LocationY;
-				JSquares[LocationY+2][LocationX+2].PrevColor=Color;
-				JSquares[LocationY+2][LocationX+2].Eat=true; 
-
-
-
-
-
-			}
-
-			
-			
-		}
-			
+		MoveOptionsMark(LocationY,LocationX,Color);	
 	}
 	
 	
@@ -409,6 +412,120 @@ private class GUI_Button {
 			
 		}
 			
+
+void MoveOptionsMark(int LocationY,int LocationX,Color Color) 
+{
+	if(Color==Color.WHITE||JSquares[LocationY][LocationX].Is_King==true) {
+
+	if(New_Game.WhiteRightMoveChecker(LocationY,LocationX)==1) {
+		JSquares[LocationY-1][LocationX+1].JSquare.setBackground(Color.LIGHT_GRAY);
+		JSquares[LocationY-1][LocationX+1].JSquare.setEnabled(true);
+		JSquares[LocationY-1][LocationX+1].PrevX=LocationX;
+		JSquares[LocationY-1][LocationX+1].PrevY=LocationY;
+		JSquares[LocationY-1][LocationX+1].PrevColor=Color;
+
+
+}
+	if(New_Game.WhiteLeftMoveChecker(LocationY,LocationX)==1) {
+		JSquares[LocationY-1][LocationX-1].JSquare.setBackground(Color.LIGHT_GRAY);
+		JSquares[LocationY-1][LocationX-1].JSquare.setEnabled(true);
+		JSquares[LocationY-1][LocationX-1].PrevX=LocationX;
+		JSquares[LocationY-1][LocationX-1].PrevY=LocationY;
+		JSquares[LocationY-1][LocationX-1].PrevColor=Color;
+		
+
+
+}
+	if(New_Game.WhiteRightEatChecker(LocationY,LocationX)==1) {
+		JSquares[LocationY-2][LocationX+2].JSquare.setBackground(Color.LIGHT_GRAY);
+		JSquares[LocationY-2][LocationX+2].JSquare.setEnabled(true);
+		JSquares[LocationY-2][LocationX+2].PrevX=LocationX;
+		JSquares[LocationY-2][LocationX+2].PrevY=LocationY;
+		JSquares[LocationY-2][LocationX+2].PrevColor=Color;
+		JSquares[LocationY-2][LocationX+2].Eat=true; 
+
+			
+		
+}
+
+	
+	if(New_Game.WhiteLeftEatChecker(LocationY,LocationX)==1){
+		JSquares[LocationY-2][LocationX-2].JSquare.setBackground(Color.LIGHT_GRAY);
+		JSquares[LocationY-2][LocationX-2].JSquare.setEnabled(true);
+		JSquares[LocationY-2][LocationX-2].PrevX=LocationX;
+		JSquares[LocationY-2][LocationX-2].PrevY=LocationY;
+		JSquares[LocationY-2][LocationX-2].PrevColor=Color;
+		JSquares[LocationY-2][LocationX-2].Eat=true; 					
+
+		}
+
+	
+
+
+
+
+}
+	
+	if(Color==Color.BLACK||JSquares[LocationY][LocationX].Is_King==true)
+	{
+		if(New_Game.BlackRightMoveChecker(LocationY,LocationX)==1) {
+			JSquares[LocationY+1][LocationX-1].JSquare.setBackground(Color.LIGHT_GRAY);
+			JSquares[LocationY+1][LocationX-1].JSquare.setEnabled(true);
+			JSquares[LocationY+1][LocationX-1].PrevX=LocationX;
+			JSquares[LocationY+1][LocationX-1].PrevY=LocationY;
+			JSquares[LocationY+1][LocationX-1].PrevColor=Color;
+			
+
+}
+		if(New_Game.BlackLeftMoveChecker(LocationY,LocationX)==1) {
+			JSquares[LocationY+1][LocationX+1].JSquare.setBackground(Color.LIGHT_GRAY);
+			JSquares[LocationY+1][LocationX+1].JSquare.setEnabled(true);
+			JSquares[LocationY+1][LocationX+1].PrevX=LocationX;
+			JSquares[LocationY+1][LocationX+1].PrevY=LocationY;
+			JSquares[LocationY+1][LocationX+1].PrevColor=Color;
+
+
+
+	}
+		if(New_Game.BlackRightEatChecker(LocationY,LocationX)==1) { 
+			JSquares[LocationY+2][LocationX-2].JSquare.setBackground(Color.LIGHT_GRAY);
+			JSquares[LocationY+2][LocationX-2].JSquare.setEnabled(true);
+			JSquares[LocationY+2][LocationX-2].PrevX=LocationX;
+			JSquares[LocationY+2][LocationX-2].PrevY=LocationY;
+			JSquares[LocationY+2][LocationX-2].PrevColor=Color;
+			JSquares[LocationY+2][LocationX-2].Eat=true; 
+
+
+
+}
+		if(New_Game.BlackLeftEatChecker(LocationY,LocationX)==1) {
+			JSquares[LocationY+2][LocationX+2].JSquare.setBackground(Color.LIGHT_GRAY);
+			JSquares[LocationY+2][LocationX+2].JSquare.setEnabled(true);
+			JSquares[LocationY+2][LocationX+2].PrevX=LocationX;
+			JSquares[LocationY+2][LocationX+2].PrevY=LocationY;
+			JSquares[LocationY+2][LocationX+2].PrevColor=Color;
+			JSquares[LocationY+2][LocationX+2].Eat=true; 
+
+
+
+
+
+		}
+
+		
+		
+	}
+}
+void MarkGray(int LocationY,int LocationX,Color Color) 
+{
+	JSquares[LocationY][LocationX].JSquare.setBackground(Color.LIGHT_GRAY);
+	JSquares[LocationY][LocationX].JSquare.setEnabled(true);
+	JSquares[LocationY][LocationX].PrevX=LocationX;
+	JSquares[LocationY][LocationX].PrevY=LocationY;
+	JSquares[LocationY][LocationX].PrevColor=Color;
+	JSquares[LocationY][LocationX].Eat=true; 
+
+}
 
 }
 
