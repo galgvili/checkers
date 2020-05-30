@@ -12,8 +12,8 @@ void Game_Run()
 
 	void MovePawn(int OldX,int OldY,int NewX,int NewY, boolean Eat)
 	{
-	//if(Game.Squares[OldX][OldY]==null)
-		//return;
+	if(Game.Squares[OldY][OldX]==null)
+		return;
 	Game.Squares[NewY][NewX]=new Soldier();
 	Game.Squares[OldY][OldX].Copy(Game.Squares[NewY][NewX]);
 	Game.Squares[OldY][OldX]=null;
@@ -79,7 +79,7 @@ void Game_Run()
     		return 0;
     	if(Game.Squares[y-1][x+1]==null)//Check if right square is empty
     		return 0;
-    	if(Game.Squares[y-1][x+1].Color==1)//Check if right square is the same color
+    	if(Game.Squares[y-1][x+1].Color==Game.Squares[y][x].Color)//Check if right square is the same color
     		return 0;
     	if(Game.Squares[y-2][x+2]!=null)//Check if the right of the right square is not empty
     		return 0;
@@ -92,7 +92,7 @@ void Game_Run()
     		return 0;
     	if(Game.Squares[y+1][x-1]==null)//Check if right square is empty
     		return 0;
-    	if(Game.Squares[y+1][x-1].Color==2)//Check if right square is the same color
+    	if(Game.Squares[y+1][x-1].Color==Game.Squares[y][x].Color)//Check if right square is the same color
     		return 0;
     	if(Game.Squares[y+2][x-2]!=null)//Check if the right of the right square is not empty
     		return 0; 		
@@ -104,7 +104,7 @@ void Game_Run()
     		return 0;
     	if(Game.Squares[y-1][x-1]==null)
     		return 0;
-    	if(Game.Squares[y-1][x-1].Color==1)//Check if left square is the same color
+    	if(Game.Squares[y-1][x-1].Color==Game.Squares[y][x].Color)//Check if left square is the same color
     		return 0;
     	if(Game.Squares[y-2][x-2]!=null)//Check if the left of the left square is not empty
     		return 0;
@@ -118,7 +118,7 @@ void Game_Run()
     		return 0;
     	if(Game.Squares[y+1][x+1]==null)
     		return 0;
-    	if(Game.Squares[y+1][x+1].Color==2)//Check if left square is the same color
+    	if(Game.Squares[y+1][x+1].Color==Game.Squares[y][x].Color)//Check if left square is the same color
     		return 0;
     	if(Game.Squares[y+2][x+2]!=null)//Check if the left of the left square is not empty
     		return 0;		
@@ -127,8 +127,9 @@ void Game_Run()
     	
     }
     boolean KingCheck(int y, int x) {
-    	if(Game.Squares[y][x].Is_King==true)
-    		return true;
+		Game.PrintBoard();
+    	if(Game.Squares[y][x].Is_King==true) {
+    		return true;}
     	if(y==0&&Game.Squares[y][x].Color==1) {
     		Game.Squares[y][x]=new King();
     		Game.Squares[y][x].Color=1;
@@ -138,7 +139,6 @@ void Game_Run()
     		return true;
     		
     	}
-    	
     	if(Game.Squares[y][x].Is_King==false&&y==7&&Game.Squares[y][x].Color==2) 
     	{
     		Game.Squares[y][x]=new King();

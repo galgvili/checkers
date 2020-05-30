@@ -148,9 +148,9 @@ for(y=0;y<8;y++) {
 		}
 	}
 
-void ReplacePawn(int LocationX,int LocationY,int PrevX,int PrevY,Color PrevColor,boolean Eat) 
+void ReplacePawn(int LocationX,int LocationY,int PrevX,int PrevY,Color PrevColor,boolean Eat,boolean IsKing) 
 {
-	int y,x;
+	int y,x,Double_Eat=0;
 	int NextColor=1;
 
 
@@ -170,15 +170,15 @@ void ReplacePawn(int LocationX,int LocationY,int PrevX,int PrevY,Color PrevColor
 	}
 	JSquares[PrevY][PrevX].JSquare.repaint();
 	JSquares[LocationY][LocationX].JSquare.revalidate();
-	JSquares[PrevY][PrevX].JSquare.repaint();
 	JSquares[LocationY][LocationX].JSquare.repaint();
 	New_Game.MovePawn(PrevX, PrevY, LocationX, LocationY,Eat);
-	if(New_Game.KingCheck(LocationY,LocationX)==true) 
-	{
+
+	if(IsKing==true)
+			JSquares[LocationY][LocationX].Is_King=true;
+
+	else if(New_Game.KingCheck(LocationY,LocationX)==true) 
 		JSquares[LocationY][LocationX].Is_King=true;
-	}
-	if(JSquares[PrevY][PrevX].Is_King==true)
-		JSquares[LocationY][LocationX].Is_King=true;
+
 	
 	if(PrevColor==Color.black) 
 	{
@@ -186,6 +186,7 @@ void ReplacePawn(int LocationX,int LocationY,int PrevX,int PrevY,Color PrevColor
 			{
 				Turn_Status.setText(BlackTurn);
 				NextColor=2;
+				Double_Eat=1;
 			}
 		}
 		else 
@@ -201,6 +202,7 @@ void ReplacePawn(int LocationX,int LocationY,int PrevX,int PrevY,Color PrevColor
 			{
 				Turn_Status.setText(WhiteTurn);	
 				NextColor=1;
+				Double_Eat=1;
 			}
 		}
 		else 
@@ -212,7 +214,7 @@ void ReplacePawn(int LocationX,int LocationY,int PrevX,int PrevY,Color PrevColor
 		for( y=0;y<8;y++) {
 			for( x=0;x<8;x++) {
 				if(New_Game.Game.Squares[y][x]!=null) {
-					if(New_Game.Game.Squares[y][x].Color==NextColor) 
+					if(New_Game.Game.Squares[y][x].Color==NextColor&&Double_Eat==0) 
 						{
 						JSquares[y][x].JPawn.Pawn.setEnabled(true);
 						JSquares[y][x].JPawn.Pawn.revalidate();
@@ -228,7 +230,13 @@ void ReplacePawn(int LocationX,int LocationY,int PrevX,int PrevY,Color PrevColor
 				}
 			}
 			}
-				
+			if(Double_Eat==1) 
+			{
+				JSquares[LocationY][LocationX].JPawn.Pawn.setEnabled(true);
+				JSquares[LocationY][LocationX].JPawn.Pawn.revalidate();
+				JSquares[LocationY][LocationX].JPawn.Pawn.repaint();
+				}
+
 		}
 
 void FinishGame() {
@@ -255,6 +263,7 @@ void ClearMarks(Board BOARD)
 		{
 		JSquares[y][x].JSquare.setEnabled(false);
 		JSquares[y][x].JSquare.setBackground(Color.BLACK);
+		JSquares[y][x].Eat=false;
 		x++;
 		}
 		}
@@ -320,10 +329,11 @@ private class GUI_Square  {
 
 	@Override
 	public void actionPerformed(ActionEvent E) {
-		
-		if(JSquare.getBackground()==Color.LIGHT_GRAY) 
-			ReplacePawn(LocationX,LocationY,PrevX,PrevY,PrevColor,Eat);
-
+		boolean king;
+		if(JSquare.getBackground()==Color.LIGHT_GRAY) {
+			king=New_Game.Game.Squares[PrevY][PrevX].Is_King;
+			ReplacePawn(LocationX,LocationY,PrevX,PrevY,PrevColor,Eat,king);
+		}
 		if(Black_Pawns_Num==0)		{	
 			Turn_Status.setText("White Wins");
 			FinishGame();}
@@ -415,7 +425,7 @@ private class GUI_Button {
 
 void MoveOptionsMark(int LocationY,int LocationX,Color Color) 
 {
-	if(Color==Color.WHITE||JSquares[LocationY][LocationX].Is_King==true) {
+	if(Color==Color.WHITE||New_Game.KingCheck(LocationY, LocationX)==true) {
 
 	if(New_Game.WhiteRightMoveChecker(LocationY,LocationX)==1) {
 		JSquares[LocationY-1][LocationX+1].JSquare.setBackground(Color.LIGHT_GRAY);
@@ -466,7 +476,7 @@ void MoveOptionsMark(int LocationY,int LocationX,Color Color)
 
 }
 	
-	if(Color==Color.BLACK||JSquares[LocationY][LocationX].Is_King==true)
+	if(Color==Color.BLACK||New_Game.KingCheck(LocationY, LocationX)==true)
 	{
 		if(New_Game.BlackRightMoveChecker(LocationY,LocationX)==1) {
 			JSquares[LocationY+1][LocationX-1].JSquare.setBackground(Color.LIGHT_GRAY);
