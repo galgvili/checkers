@@ -10,7 +10,7 @@ void Game_Run()
 	Game.InitiateBoard(Game);
 }
 
-	void MovePawn(int OldX,int OldY,int NewX,int NewY, boolean Eat)
+	void MovePawn(int OldX,int OldY,int NewX,int NewY, boolean Eat, boolean King)
 	{
 	if(Game.Squares[OldY][OldX]==null)
 		return;
@@ -20,8 +20,7 @@ void Game_Run()
 	if(Eat==true)
 		Game.Squares[(NewY+OldY)/2][(NewX+OldX)/2]=null;
 
-	KingCheck(NewY,NewX);//King Check
-
+	Game.Squares[NewY][NewX].Is_King=King;
 		
 	}//
 
