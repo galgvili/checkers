@@ -126,7 +126,6 @@ void Game_Run()
     	
     }
     boolean KingCheck(int y, int x) {
-		Game.PrintBoard();
     	if(Game.Squares[y][x].Is_King==true) {
     		return true;}
     	if(y==0&&Game.Squares[y][x].Color==1) {

@@ -54,12 +54,7 @@ y=0;
         	}
         	System.out.print("\n\n");
     	}
-		if (Squares[0][3]!=null)
-		System.out.print(Squares[0][3].Is_King);
-		if (Squares[1][2]!=null)
-		System.out.print(Squares[1][2].Is_King);
 
-    	System.out.print("\n\n");
 
 
  }

@@ -2,7 +2,6 @@ package Checkers;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Ellipse2D;
 import java.awt.Color;
 
 import javax.swing.*;
@@ -14,16 +13,18 @@ public class GUI   {
 
 	GameManager New_Game =new GameManager();
 	GUI_Square JSquares[][]=new GUI_Square[8][8];
-	Container Center=new Container();
+	Container GUI_BOARD_PANEL=new Container();
 	Container West=new Container();
 	JFrame board=new JFrame();	
-	 String BlackTurn="                  Black Turn",WhiteTurn="                  White Turn";
-	JLabel Turn_Status=new JLabel(WhiteTurn);
-	JLabel Stam=new JLabel("Stam");
-int Eat_More=0;
+	JPanel GUI_SOUTH_PANEL=new JPanel();
+	JPanel GUI_NORTH_PANEL=new JPanel();
+	GUI_Button Restart_Button=new GUI_Button(1);
+	GUI_Button GiveUp_Button=new GUI_Button(2);
 
-	int Black_Pawns_Num=12;
-	int White_Pawns_Num=12;
+	String BlackTurn ="   Black Turn   ",WhiteTurn ="   White Turn   ";
+	JLabel Turn_Status=new JLabel(WhiteTurn);
+	JLabel Score_Status=new JLabel();
+	int Eat_More=0, Black_Pawns_Num=12, White_Pawns_Num=12,Black_Score=0,White_Score=0,NextColor=1;
 
 
 
@@ -31,27 +32,8 @@ int Eat_More=0;
 
 void GameStart ()
 {
-	 int rows=8, columns=8;
-
 	New_Game.Game_Run();
-	board.setLayout(new BorderLayout());
-	board.setSize(700, 600);
-	board.setBackground(Color.LIGHT_GRAY);
-	board.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	board.setVisible(true);
-	Center.setLayout(new GridLayout(rows,columns));
-	West.setBackground(Color.BLACK);
-	board.add(Center,BorderLayout.CENTER);
-	Center.setBackground(Color.GRAY);
-	BoardBuilder(Center,New_Game.Game);
-	GUI_Button Restart_Button=new GUI_Button(1);
-	board.add(Restart_Button.Button,BorderLayout.SOUTH);
-	board.add(Turn_Status,BorderLayout.NORTH);
-	GUI_Button GiveUp_Button=new GUI_Button(2);
-	board.add(GiveUp_Button.Button,BorderLayout.SOUTH);
-	board.setExtendedState(JFrame.MAXIMIZED_BOTH);//JFrame Bug Fix 
-	board.setExtendedState(JFrame.NORMAL); //JFrame Bug Fix
-			
+	GUI_Builder();
 		
 		
 			}
@@ -59,12 +41,48 @@ void GameStart ()
 
 
 	
+void GUI_Builder() 
+{
+	 int rows=8, columns=8;
+	board.setLayout(new BorderLayout());
+	board.setSize(600, 650);
+	board.setBackground(Color.LIGHT_GRAY);
+	board.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	board.setVisible(true);
+	GUI_NORTH_PANEL.setLayout(new FlowLayout(3));
+	GUI_SOUTH_PANEL.setLayout(new FlowLayout(3));
 
+	GUI_BOARD_PANEL.setLayout(new GridLayout(rows,columns));
+	West.setBackground(Color.BLACK);
+	board.add(GUI_BOARD_PANEL,BorderLayout.CENTER);
+	GUI_BOARD_PANEL.setBackground(Color.GRAY);
+	BoardBuilder(GUI_BOARD_PANEL,New_Game.Game);
+	Score_Status.setText(	"                             Blacks: "+Black_Score+"   Whites: "+White_Score);
+Turn_Status.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1) );
+Turn_Status.setFont(new Font("Courier", Font.BOLD,22));
+Score_Status.setFont(new Font("Courier", Font.BOLD,22));
+
+GUI_NORTH_PANEL.add(Turn_Status);
+	GUI_NORTH_PANEL.add(Score_Status);
+
+	board.add(GUI_NORTH_PANEL,BorderLayout.NORTH);
+	
+	GUI_SOUTH_PANEL.add(GiveUp_Button.Button);
+	GUI_SOUTH_PANEL.add(Restart_Button.Button);
+	board.add(GUI_SOUTH_PANEL,BorderLayout.SOUTH);
+	board.setExtendedState(JFrame.MAXIMIZED_BOTH);//JFrame Bug Fix 
+	board.setExtendedState(JFrame.NORMAL); //JFrame Bug Fix
+
+
+
+}
 
 
 
 void ResetBoard(Container pane,Board board) 
 {
+	JLabel Turn_Status=new JLabel(WhiteTurn);
+
 	int x=0,y=0;
 	Color temp;
 	for(y=0;y<8;y++) {
@@ -158,7 +176,6 @@ for(y=0;y<8;y++) {
 void ReplacePawn(int LocationX,int LocationY,int PrevX,int PrevY,Color PrevColor,boolean Eat,boolean IsKing) 
 {
 	int y,x;
-	int NextColor=1;
 
 
 	JSquares[LocationY][LocationX].Set_Pawn(PrevColor);
@@ -366,12 +383,19 @@ private class GUI_Square  {
 			ReplacePawn(LocationX,LocationY,PrevX,PrevY,PrevColor,Eat,king);
 		}
 		if(Black_Pawns_Num==0)		{	
-			Turn_Status.setText("White Wins");
-			FinishGame();}
+			Turn_Status.setText("   White Wins!!   ");
+			White_Score++;
+			FinishGame();
+}
+		
 		if(White_Pawns_Num==0) {
-			Turn_Status.setText("Black Wins");
+			Turn_Status.setText("   Black Wins!!   ");
+			Black_Score++;
 			FinishGame();	
+
 		}
+		Score_Status.setText(	"                             Blacks: "+Black_Score+"   Whites: "+White_Score);
+
 		
 
 
@@ -429,16 +453,24 @@ private class GUI_Button {
 	{
 		type=TYPE;
 		Button.addActionListener(new Actions());
+		Button.setFocusPainted(false);
+
 		if(type==1) 
 		{
 			Button.setText("Restart");
+			Button.setFont(new Font("Courier", Font.CENTER_BASELINE,16));
+
+
 			
 		}
 		if(type==2) 
 		{
 		Button.setText("Give Up");
+		Button.setFont(new Font("Courier", Font.CENTER_BASELINE,16));
+
 			
 		}
+		
 		
 		
 		
@@ -449,18 +481,30 @@ private class GUI_Button {
 	public void actionPerformed(ActionEvent E) {
 		if(type==1) 
 		{
-			ResetBoard(Center,New_Game.Game);
+			ResetBoard(GUI_BOARD_PANEL,New_Game.Game);
 		}
 		if(type==2)
 		{
-			ResetBoard(Center,New_Game.Game);
+			if(NextColor==1) {
+				Turn_Status.setText("Black Wins");
+				Black_Score++;
+				}
+		else {
+			Turn_Status.setText("White Wins");
+			White_Score++;
+			}
+			Score_Status.setText(	"                             Blacks: "+Black_Score+"   Whites: "+White_Score);
+
+			FinishGame();	
 			
-		}
-	}	}
+		
+	}	
+	
+	}
+
 
 			
-			
-		}
+		}}
 			
 
 void MoveOptionsMark(int LocationY,int LocationX,Color Color) 
