@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Color;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 
@@ -205,55 +206,60 @@ void ReplacePawn(int LocationX,int LocationY,int PrevX,int PrevY,Color PrevColor
 	
 
 	
-	if(PrevColor==Color.black||IsKing==true) 
+	if(PrevColor==Color.black) 
 	{
-		if((Eat==true) &&(New_Game.BlackRightEatChecker(LocationY, LocationX)==1||New_Game.BlackLeftEatChecker(LocationY, LocationX)==1)) {
-			{
-				Turn_Status.setText(BlackTurn);
+		if((Eat==true) &&(New_Game.BlackRightEatChecker(LocationY, LocationX)==1||New_Game.BlackLeftEatChecker(LocationY, LocationX)==1)) 
+		{
+			   Turn_Status.setText(BlackTurn);
 				NextColor=2;
 				Eat_More=1;
-			}
-			if(IsKing==true) {
-				if((Eat==true) &&(New_Game.WhiteRightEatChecker(LocationY, LocationX)==1||New_Game.WhiteLeftEatChecker(LocationY, LocationX)==1)) {
+		}
+		else 
+				{
+					NextColor=1;
+					Turn_Status.setText(WhiteTurn);	
+				}
+		
+	   if(IsKing==true) 
+			{
+				if((Eat==true) &&(New_Game.WhiteRightEatChecker(LocationY, LocationX)==1||New_Game.WhiteLeftEatChecker(LocationY, LocationX)==1))
 					{
-						Turn_Status.setText(WhiteTurn);	
-						NextColor=1;
+						Turn_Status.setText(BlackTurn);	
+						NextColor=2;
 						Eat_More=1;
 					}
 
-			}}
-		}
-		else 
-		{
-			NextColor=1;
-			Turn_Status.setText(WhiteTurn);	
-		}
+			}
+			}
+		 
 
-	}
-	if(PrevColor==Color.white||IsKing==true)
+
+	
+			
+	else	
 	{
-		if((Eat==true) &&(New_Game.WhiteRightEatChecker(LocationY, LocationX)==1||New_Game.WhiteLeftEatChecker(LocationY, LocationX)==1)) {
+		if((Eat==true) &&(New_Game.WhiteRightEatChecker(LocationY, LocationX)==1||New_Game.WhiteLeftEatChecker(LocationY, LocationX)==1)) 
 			{
 				Turn_Status.setText(WhiteTurn);	
 				NextColor=1;
 				Eat_More=1;
 			}
-			if(IsKing==true) {
-				if((Eat==true) &&(New_Game.BlackRightEatChecker(LocationY, LocationX)==1||New_Game.BlackLeftEatChecker(LocationY, LocationX)==1)) {
-					{
+			
+			else
+			{
+			NextColor=2;
+			Turn_Status.setText(BlackTurn);
+			}
+		    if(IsKing==true) 
+			{
+				if((Eat==true) &&(New_Game.BlackRightEatChecker(LocationY, LocationX)==1||New_Game.BlackLeftEatChecker(LocationY, LocationX)==1))
+				    {
 						Turn_Status.setText(WhiteTurn);	
 						NextColor=1;
 						Eat_More=1;
 					}
 
-			}}
-
-		}
-		else 
-		{
-			NextColor=2;
-			Turn_Status.setText(BlackTurn);
-		}
+			}
 	}
 		for( y=0;y<8;y++) {
 			for( x=0;x<8;x++) {
@@ -286,18 +292,6 @@ void ReplacePawn(int LocationX,int LocationY,int PrevX,int PrevY,Color PrevColor
 
 		}
 
-void FinishGame() {
-	int x,y;
-	for( y=0;y<8;y++) {
-		for( x=0;x<8;x++) {
-			if(New_Game.Game.Squares[y][x]!=null) {
-					JSquares[y][x].JPawn.Pawn.setEnabled(false);
-					JSquares[y][x].JPawn.Pawn.revalidate();
-					JSquares[y][x].JPawn.Pawn.repaint();}
-
-			}}
-
-}
 void ClearMarks(Board BOARD) 
 {
 	int x=0,y=0;
@@ -383,15 +377,23 @@ private class GUI_Square  {
 			ReplacePawn(LocationX,LocationY,PrevX,PrevY,PrevColor,Eat,king);
 		}
 		if(Black_Pawns_Num==0)		{	
-			Turn_Status.setText("   White Wins!!   ");
+			JOptionPane.showMessageDialog(board,
+				    "  White Wins!!!",
+				    "A plain message",
+				    JOptionPane.PLAIN_MESSAGE);
+
 			White_Score++;
-			FinishGame();
+			ResetBoard(GUI_BOARD_PANEL,New_Game.Game);
 }
 		
 		if(White_Pawns_Num==0) {
-			Turn_Status.setText("   Black Wins!!   ");
+			JOptionPane.showMessageDialog(board,
+				    "  Black Wins!!!",
+				    "A plain message",
+				    JOptionPane.PLAIN_MESSAGE);
 			Black_Score++;
-			FinishGame();	
+			ResetBoard(GUI_BOARD_PANEL,New_Game.Game);
+
 
 		}
 		Score_Status.setText(	"                             Blacks: "+Black_Score+"   Whites: "+White_Score);
@@ -461,6 +463,7 @@ private class GUI_Button {
 			Button.setFont(new Font("Courier", Font.CENTER_BASELINE,16));
 
 
+
 			
 		}
 		if(type==2) 
@@ -483,19 +486,28 @@ private class GUI_Button {
 		{
 			ResetBoard(GUI_BOARD_PANEL,New_Game.Game);
 		}
+		
 		if(type==2)
 		{
 			if(NextColor==1) {
-				Turn_Status.setText("Black Wins");
+				JOptionPane.showMessageDialog(board,
+					    "  Black Wins!!!",
+					    "A plain message",
+					    JOptionPane.PLAIN_MESSAGE);
 				Black_Score++;
+				
 				}
 		else {
-			Turn_Status.setText("White Wins");
+			JOptionPane.showMessageDialog(board,
+				    "  White Wins!!!",
+				    "A plain message",
+				    JOptionPane.PLAIN_MESSAGE);
+
 			White_Score++;
 			}
 			Score_Status.setText(	"                             Blacks: "+Black_Score+"   Whites: "+White_Score);
+			ResetBoard(GUI_BOARD_PANEL,New_Game.Game);
 
-			FinishGame();	
 			
 		
 	}	
