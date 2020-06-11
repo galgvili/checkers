@@ -4,9 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Color;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
 
 
 
@@ -47,6 +45,7 @@ void GUI_Builder()
 	 int rows=8, columns=8;
 	board.setLayout(new BorderLayout());
 	board.setSize(600, 650);
+	board.setResizable(false);
 	board.setBackground(Color.LIGHT_GRAY);
 	board.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	board.setVisible(true);
@@ -86,7 +85,8 @@ void ResetBoard(Container pane,Board board)
 
 	int x=0,y=0;
 	Color temp;
-	for(y=0;y<8;y++) {
+	for(y=0;y<8;y++) //Remove all pawns from the board 
+	{ 
 		for(x=0;x<8;x++) {
 			if(board.Squares[y][x]!=null) {
 
@@ -96,26 +96,27 @@ void ResetBoard(Container pane,Board board)
 				}
 
 		}}
-	board.InitiateBoard(board);
+	board.InitiateBoard(board); // Build the backend board
 
-	for(y=0;y<8;y++) {
+	for(y=0;y<8;y++) //Build the GUI board
+	{
 		if(y%2==0) 
 			temp=Color.WHITE;
 		else
 			temp=Color.BLACK;
 		for(x=0;x<8;x++) {
-			JSquares[y][x].JSquare.setBackground(temp);
+			JSquares[y][x].JSquare.setBackground(temp);//Set the Square color
 			if(temp==Color.BLACK) 
 			{
 				if(board.Squares[y][x]!=null) {
 					if(board.Squares[y][x].Color==1) 
 					{
-						JSquares[y][x].Set_Pawn(Color.WHITE);
+						JSquares[y][x].Set_Pawn(Color.WHITE);//Set White Pawn
 					}
 					if(board.Squares[y][x].Color==2) 
 
 						{
-						JSquares[y][x].Set_Pawn(Color.BLACK);
+						JSquares[y][x].Set_Pawn(Color.BLACK); //Set black pawn
 						JSquares[y][x].JPawn.Pawn.setEnabled(false);
 						}
 				}
@@ -311,31 +312,6 @@ void ClearMarks(Board BOARD)
 		
 	
 }
-private static class PawnShaping implements Border {
-
-    private int radius;
-
-
-    PawnShaping(int radius) {
-        this.radius = radius;
-    }
-
-
-    public Insets getBorderInsets(Component c) {
-        return new Insets(this.radius+20, this.radius+20, this.radius, this.radius);
-    }
-
-
-    public boolean isBorderOpaque() {
-        return true;
-    }
-
-
-    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-        g.drawRoundRect(x, y, width-1, height-1, radius+20, radius+20);
-    }
-}
-
 
 private class GUI_Square  {
 	JButton JSquare=new JButton();
@@ -415,7 +391,7 @@ private class GUI_Square  {
 
 private class GUI_Pawn  {
 
-	JButton Pawn=new JButton();
+	JButton Pawn=new RoundButton("");
 	int LocationX;
 	int LocationY;
 	Color Color;
@@ -426,7 +402,8 @@ private class GUI_Pawn  {
 		LocationY=y;
 		Color=COLOR;
 		Pawn.setBackground(COLOR);
-		Pawn.setBorder(new PawnShaping(10));
+		Pawn.setBorder(new RoundButton.PawnShaping(10));
+
 		Pawn.addActionListener(new Actions());
 			
 	}
