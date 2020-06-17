@@ -28,9 +28,19 @@ public class GUI   {
 
 
 
+	  public static final Color DARK_SQUERES = new Color(169,120,55);
+	  public static final Color LIGHT_SQUERE = new Color(250,246,189);
+	  public static final Color BLACK_PAWN_COLOR = new Color(80,59,45);
+	  public static final Color GAME_BG = new Color(166,111,75);
+	  public static final Color GUI_BUTTON_BG = new Color(168,120,88);
+
+
+
+
 
 void GameStart ()
 {
+	Turn_Status.setForeground(Color.white);
 	New_Game.Game_Run();
 	GUI_Builder();
 		
@@ -50,7 +60,9 @@ void GUI_Builder()
 	board.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	board.setVisible(true);
 	GUI_NORTH_PANEL.setLayout(new FlowLayout(3));
+	GUI_NORTH_PANEL.setBackground(GAME_BG);
 	GUI_SOUTH_PANEL.setLayout(new FlowLayout(3));
+	GUI_SOUTH_PANEL.setBackground(GAME_BG);
 
 	GUI_BOARD_PANEL.setLayout(new GridLayout(rows,columns));
 	West.setBackground(Color.BLACK);
@@ -81,8 +93,9 @@ GUI_NORTH_PANEL.add(Turn_Status);
 
 void ResetBoard(Container pane,Board board) 
 {
-	JLabel Turn_Status=new JLabel(WhiteTurn);
-
+	Turn_Status.setText(WhiteTurn);
+	Turn_Status.setForeground(Color.white);
+	
 	int x=0,y=0;
 	Color temp;
 	for(y=0;y<8;y++) //Remove all pawns from the board 
@@ -101,12 +114,12 @@ void ResetBoard(Container pane,Board board)
 	for(y=0;y<8;y++) //Build the GUI board
 	{
 		if(y%2==0) 
-			temp=Color.WHITE;
+			temp=LIGHT_SQUERE;
 		else
-			temp=Color.BLACK;
+			temp=DARK_SQUERES;
 		for(x=0;x<8;x++) {
 			JSquares[y][x].JSquare.setBackground(temp);//Set the Square color
-			if(temp==Color.BLACK) 
+			if(temp==DARK_SQUERES) 
 			{
 				if(board.Squares[y][x]!=null) {
 					if(board.Squares[y][x].Color==1) 
@@ -116,15 +129,15 @@ void ResetBoard(Container pane,Board board)
 					if(board.Squares[y][x].Color==2) 
 
 						{
-						JSquares[y][x].Set_Pawn(Color.BLACK); //Set black pawn
+						JSquares[y][x].Set_Pawn(BLACK_PAWN_COLOR); //Set black pawn
 						JSquares[y][x].JPawn.Pawn.setEnabled(false);
 						}
 				}
 					}
-			if(temp.equals(Color.BLACK))
-				temp=Color.WHITE;
+			if(temp.equals(DARK_SQUERES))
+				temp=LIGHT_SQUERE;
 				else
-					temp=Color.BLACK;
+					temp=DARK_SQUERES;
 
 			}}
 	
@@ -138,15 +151,15 @@ int x=0,y=0;
 Color temp;
 for(y=0;y<8;y++) {
 	if(y%2==0) 
-		temp=Color.WHITE;
+		temp=LIGHT_SQUERE;
 	else
-		temp=Color.BLACK;
+		temp=DARK_SQUERES;
 
 	for(x=0;x<8;x++) {
 	JSquares[y][x]=new GUI_Square(x,y,temp);
 	
 	
-	if(temp==Color.BLACK) 
+	if(temp==DARK_SQUERES)
 	{
 		if(board.Squares[y][x]!=null) {
 			if(board.Squares[y][x].Color==1) 
@@ -156,7 +169,7 @@ for(y=0;y<8;y++) {
 			}
 			else 
 				{
-				JSquares[y][x].Set_Pawn(Color.BLACK);
+				JSquares[y][x].Set_Pawn(BLACK_PAWN_COLOR);
 				JSquares[y][x].JPawn.Pawn.setEnabled(false);
 				}
 
@@ -165,10 +178,10 @@ for(y=0;y<8;y++) {
 		pane.add(JSquares[y][x].JSquare);
 
 		
-		if(temp.equals(Color.BLACK))
-			temp=Color.WHITE;
+		if(temp.equals(DARK_SQUERES))
+			temp=LIGHT_SQUERE;
 			else
-				temp=Color.BLACK;
+				temp=DARK_SQUERES;
 
 		}
 					
@@ -188,7 +201,7 @@ void ReplacePawn(int LocationX,int LocationY,int PrevX,int PrevY,Color PrevColor
 		JSquares[((PrevY+LocationY)/2)][((PrevX+LocationX)/2)].JSquare.removeAll();
 		JSquares[((PrevY+LocationY)/2)][((PrevX+LocationX)/2)].JSquare.revalidate();
 		JSquares[((PrevY+LocationY)/2)][((PrevX+LocationX)/2)].JSquare.repaint();
-		if(PrevColor==Color.black)
+		if(PrevColor==BLACK_PAWN_COLOR)
 			White_Pawns_Num--;
 		else
 			Black_Pawns_Num--;
@@ -207,18 +220,21 @@ void ReplacePawn(int LocationX,int LocationY,int PrevX,int PrevY,Color PrevColor
 	
 
 	
-	if(PrevColor==Color.black) 
+	if(PrevColor==BLACK_PAWN_COLOR) 
 	{
 		if((Eat==true) &&(New_Game.BlackRightEatChecker(LocationY, LocationX)==1||New_Game.BlackLeftEatChecker(LocationY, LocationX)==1)) 
 		{
 			   Turn_Status.setText(BlackTurn);
+				Turn_Status.setForeground(Color.black);
+
 				NextColor=2;
 				Eat_More=1;
 		}
 		else 
 				{
 					NextColor=1;
-					Turn_Status.setText(WhiteTurn);	
+					Turn_Status.setText(WhiteTurn);
+					Turn_Status.setForeground(Color.white);
 				}
 		
 	   if(IsKing==true) 
@@ -226,6 +242,8 @@ void ReplacePawn(int LocationX,int LocationY,int PrevX,int PrevY,Color PrevColor
 				if((Eat==true) &&(New_Game.WhiteRightEatChecker(LocationY, LocationX)==1||New_Game.WhiteLeftEatChecker(LocationY, LocationX)==1))
 					{
 						Turn_Status.setText(BlackTurn);	
+						Turn_Status.setForeground(Color.black);
+
 						NextColor=2;
 						Eat_More=1;
 					}
@@ -242,6 +260,8 @@ void ReplacePawn(int LocationX,int LocationY,int PrevX,int PrevY,Color PrevColor
 		if((Eat==true) &&(New_Game.WhiteRightEatChecker(LocationY, LocationX)==1||New_Game.WhiteLeftEatChecker(LocationY, LocationX)==1)) 
 			{
 				Turn_Status.setText(WhiteTurn);	
+				Turn_Status.setForeground(Color.white);
+
 				NextColor=1;
 				Eat_More=1;
 			}
@@ -250,12 +270,15 @@ void ReplacePawn(int LocationX,int LocationY,int PrevX,int PrevY,Color PrevColor
 			{
 			NextColor=2;
 			Turn_Status.setText(BlackTurn);
+			Turn_Status.setForeground(Color.black);
+
 			}
 		    if(IsKing==true) 
 			{
 				if((Eat==true) &&(New_Game.BlackRightEatChecker(LocationY, LocationX)==1||New_Game.BlackLeftEatChecker(LocationY, LocationX)==1))
 				    {
 						Turn_Status.setText(WhiteTurn);	
+						Turn_Status.setForeground(Color.white);
 						NextColor=1;
 						Eat_More=1;
 					}
@@ -304,7 +327,7 @@ void ClearMarks(Board BOARD)
 		for(;x<8;x++) 
 		{
 		JSquares[y][x].JSquare.setEnabled(false);
-		JSquares[y][x].JSquare.setBackground(Color.BLACK);
+		JSquares[y][x].JSquare.setBackground(DARK_SQUERES);
 		JSquares[y][x].Eat=false;
 		x++;
 		}
@@ -438,6 +461,7 @@ private class GUI_Button {
 		{
 			Button.setText("Restart");
 			Button.setFont(new Font("Courier", Font.CENTER_BASELINE,16));
+			Button.setBackground(GUI_BUTTON_BG);
 
 
 
@@ -447,6 +471,9 @@ private class GUI_Button {
 		{
 		Button.setText("Give Up");
 		Button.setFont(new Font("Courier", Font.CENTER_BASELINE,16));
+		Button.setBackground(GUI_BUTTON_BG);
+
+
 
 			
 		}
@@ -549,7 +576,7 @@ void MoveOptionsMark(int LocationY,int LocationX,Color Color)
 
 }
 	
-	if(Color==Color.BLACK||New_Game.KingCheck(LocationY, LocationX)==true)
+	if(Color==BLACK_PAWN_COLOR||New_Game.KingCheck(LocationY, LocationX)==true)
 	{
 		if(New_Game.BlackRightMoveChecker(LocationY,LocationX)==1&&Eat_More==0) {
 			JSquares[LocationY+1][LocationX-1].JSquare.setBackground(Color.LIGHT_GRAY);

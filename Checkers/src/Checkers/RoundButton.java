@@ -67,7 +67,6 @@ public class RoundButton extends JButton {
 
 // Create a frame in which to show the button.
     JFrame frame = new JFrame();
-    frame.getContentPane().setBackground(Color.yellow);
     frame.getContentPane().add(button);
     frame.getContentPane().setLayout(new FlowLayout());
     frame.setSize(150, 150);
